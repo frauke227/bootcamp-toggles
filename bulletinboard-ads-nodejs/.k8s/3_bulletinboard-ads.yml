@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bulletinboard-ads
+spec:
+  selector:
+    matchLabels:
+      app: bulletinboard-ads
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: bulletinboard-ads
+    spec:
+      imagePullSecrets:
+        - name: docker-registry
+      containers:
+        - name: app
+          image: cc-ms-k8s-training.common.repositories.cloud.sap/bulletinboard-ads-<your D/C/I number>
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: PORT
+              value: "8080"
+            - name: POSTGRES_CONNECTION_STRING
+              value: postgres://slonik:topsekret@bulletinboard-ads-db/ads
+            - name: REVIEWS_ENDPOINT
+              value: https://app.ingress.<CLUSTER>.<PROJECT>.shoot.canary.k8s-hana.ondemand.com/reviews
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bulletinboard-ads
+spec:
+  selector:
+    app: bulletinboard-ads
+  ports:
+    - name: app
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert.gardener.cloud/purpose: managed
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  name: bulletinboard-ads
+spec:
+  rules:
+    - host: app.ingress.<CLUSTER>.<PROJECT>.shoot.canary.k8s-hana.ondemand.com
+      http:
+        paths:
+          - path: /ads(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: bulletinboard-ads
+                port:
+                  number: 8080
+  tls:
+    - hosts:
+        - app.ingress.<CLUSTER>.<PROJECT>.shoot.canary.k8s-hana.ondemand.com
+      secretName: app-certs
