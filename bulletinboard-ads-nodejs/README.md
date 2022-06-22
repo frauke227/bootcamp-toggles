@@ -16,10 +16,6 @@
 
 ## Getting started
 
-Clone this repository:
-
-`git clone --branch bulletinboard-ads-solution https://github.tools.sap/cloud-curriculum/exercise-code-nodejs.git bulletinboard-ads-solution`
-
 Please run:
 
 1. `npm install`
