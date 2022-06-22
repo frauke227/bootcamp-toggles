@@ -16,23 +16,21 @@
 
 ## Getting started
 
-Clone this repository:
+- Clone this repository
 
-`git clone --branch bulletinboard-reviews-solution https://github.tools.sap/cloud-curriculum/exercise-code-nodejs.git bulletinboard-reviews-solution`
+- Please run:
 
-Please run:
+  1. `npm install`
 
-1. `npm install`
+      to install all required dependencies
 
-    to install all required dependencies
+  1. `npm run db:start` (in a dedicated terminal)
 
-1. `npm run db:start` (in a dedicated terminal)
+      to start a local postgres instance
 
-    to start a local postgres instance
+  1. `npm start`
 
-1. `npm start`
-
-    to start the server
+      to start the server
 
 The **UI** will be availabe at [localhost:9090](http://localhost:9090).
 
