@@ -42,6 +42,10 @@ The **API** can be accessed at
 
 - [localhost:9090/api/v1/averageRatings](http://localhost:9090/api/v1/averageRatings)
 
+## Ad-Blocker
+**If the UI does not load, please make sure your ad-blocker is not accidentially blocking parts of the application ;-)**
+
+
 ## Available Scripts
 
 - `npm start`
