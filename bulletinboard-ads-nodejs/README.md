@@ -38,6 +38,9 @@ The **UI** will be availabe at [localhost:8080](http://localhost:8080).
 
 The **API** can be accessed at [localhost:8080/api/v1/ads](http://localhost:8080/api/v1/ads).
 
+## Ad-Blocker
+**If the UI does not load, please make sure your ad-blocker is not accidentially blocking parts of the application ;-)**
+
 ## Available Scripts
 
 - `npm start`
