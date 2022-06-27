@@ -80,7 +80,7 @@ Have a look at the `migrations` folder, file `lib/store/migrate.js`, and the `db
 
 ### Express Router
 
-We are using an [express.Router](https://expressjs.com/en/4x/api.html#express.router) instance for encapsulating the ads API.
+We are using an [express.Router](https://expressjs.com/en/4x/api.html#express.router) instance for encapsulating the reviews API.
 
 Have a look at the
 
@@ -178,8 +178,8 @@ For a detailed guide please refer to [Cloud Foundry Basics (Node.js)](https://pa
 
 1. Run `kubectl apply -f ./.k8s/1_docker-registry.yml`.
 
-1. Run `kubectl apply -f ./.k8s/2_bulletinboard-ads-db.yml`.
+1. Run `kubectl apply -f ./.k8s/2_bulletinboard-reviews-db.yml`.
 
-1. Run `kubectl apply -f ./.k8s/3_bulletinboard-ads.yml`.
+1. Run `kubectl apply -f ./.k8s/3_bulletinboard-reviews.yml`.
 
 For a detailed guide please refer to [Kubernetes Basics (Node.js)](https://pages.github.tools.sap/cloud-curriculum/materials/cloud-platforms/kubernetes-nodejs/).
