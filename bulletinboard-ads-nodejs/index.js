@@ -20,7 +20,9 @@ const server =
     .listen(port, () => log.info('Server is listening on http://localhost:%d', port))
     .on('error', ({ message }) => log.error('Error starting server: %s', message))
 
-// gracefully shutdown the server and the database connection
-const shutdown = () => server.close(() => pool.end())
+const shutdown = () => {
+  // TODO: shutdown the server and the database connection gracefully
+}
+
 process.on('SIGINT', () => shutdown())
 process.on('SIGTERM', () => shutdown())
