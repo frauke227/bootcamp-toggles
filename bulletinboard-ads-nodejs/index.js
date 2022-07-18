@@ -15,14 +15,14 @@ const storage = new PostgresAdStorage(pool, logger)
 const reviewsClient = new ReviewsClient(fetch, endpoint, logger)
 const app = application(storage, reviewsClient, logger)
 
-const server =
-  app
-    .listen(port, () => log.info('Server is listening on http://localhost:%d', port))
-    .on('error', ({ message }) => log.error('Error starting server: %s', message))
 
-const shutdown = () => {
-  // TODO: shutdown the server and the database connection gracefully
-}
+app
+  .listen(port, () => log.info('Server is listening on http://localhost:%d', port))
+  .on('error', ({ message }) => log.error('Error starting server: %s', message))
 
-process.on('SIGINT', () => shutdown())
-process.on('SIGTERM', () => shutdown())
+// const shutdown = () => {
+//   // TODO: shutdown the server and the database connection gracefully
+// }
+
+// process.on('SIGINT', () => shutdown())
+// process.on('SIGTERM', () => shutdown())
