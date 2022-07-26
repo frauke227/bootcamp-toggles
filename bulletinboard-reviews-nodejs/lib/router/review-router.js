@@ -30,10 +30,10 @@ export default (storage, logger) => {
     }
   })
 
-  router.get('/:reviewee_email', async (req, res, next) => {
+  router.get('/:revieweeEmail', async (req, res, next) => {
     try {
-      const { params: { reviewee_email } } = req
-      const reviews = await storage.readAllFor(reviewee_email)
+      const { params: { revieweeEmail } } = req
+      const reviews = await storage.readAllFor(revieweeEmail)
       res
         .status(200)
         .json(reviews)

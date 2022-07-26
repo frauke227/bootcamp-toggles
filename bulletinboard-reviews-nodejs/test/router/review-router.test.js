@@ -94,9 +94,9 @@ describe('review-router', () => {
     })
   })
 
-  describe('get /:reviewee_email', () => {
+  describe('get /:revieweeEmail', () => {
     it('should read a list of reviews for given reviewee email', async () => {
-      const { reviewee_email } = FIRST_REVIEW
+      const { revieweeEmail } = FIRST_REVIEW
       const id = 1
       const reviews = [
         {
@@ -104,10 +104,10 @@ describe('review-router', () => {
           ...FIRST_REVIEW
         }
       ]
-      storageStub.readAllFor.withArgs(reviewee_email).resolves(reviews)
+      storageStub.readAllFor.withArgs(revieweeEmail).resolves(reviews)
       const { body } =
         await client
-          .get(`${MOUNT_PATH}/${reviewee_email}`)
+          .get(`${MOUNT_PATH}/${revieweeEmail}`)
           .expect(200)
           .expect('Content-Type', /application\/json/)
       assert.deepEqual(body, reviews)

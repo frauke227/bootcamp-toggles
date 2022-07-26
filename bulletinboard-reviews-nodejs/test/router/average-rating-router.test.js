@@ -25,19 +25,19 @@ describe('average-rating-router', () => {
     sandbox.restore()
   })
 
-  describe('get /:reviewee_email', () => {
+  describe('get /:revieweeEmail', () => {
     it('should read an ad', async () => {
       const expectedAverageRating = 13.37
-      const { reviewee_email } = FIRST_REVIEW
+      const { revieweeEmail } = FIRST_REVIEW
       storageStub
         .getAverageRatingFor
-        .withArgs(reviewee_email)
+        .withArgs(revieweeEmail)
         .resolves({
           averageRating: expectedAverageRating
         })
       const { body } =
         await client
-          .get(`/api/v1/averageRatings/${reviewee_email}`)
+          .get(`/api/v1/averageRatings/${revieweeEmail}`)
           .expect(200)
           .expect('Content-Type', /application\/json/)
       assert.deepEqual(body, {

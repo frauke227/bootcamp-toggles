@@ -47,7 +47,7 @@ const Review = function (props) {
 }
 
 // REVISE this needs revision, find a way to cleanly separate the entire dialog
-export default function ContactReviews(props) {
+export default function ContactReviewss (props) {
   const [state, setState] = useState({ reviews: [], message: '', newReview: {}, messageFromCreation: '' })
   const dialog = useRef({})
 
@@ -58,7 +58,7 @@ export default function ContactReviews(props) {
   useEffect(loadReviews, [])
 
   const addReview = () => {
-    setState(oldState => ({ ...oldState, newReview: { reviewee_email: props.contact } }))
+    setState(oldState => ({ ...oldState, newReview: { revieweeEmail: props.contact } }))
     dialog.current.show()
   }
 

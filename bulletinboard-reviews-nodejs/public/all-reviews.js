@@ -14,7 +14,7 @@ const Review = function (props) {
     }
   }
 
-  const description = `From ${props.review.reviewer_email} for ${props.review.reviewee_email}`
+  const description = `From ${props.review.reviewer_email} for ${props.review.revieweeEmail}`
 
   return html`
     <ui5-li type='Inactive'
@@ -26,7 +26,7 @@ const Review = function (props) {
     `
 }
 
-export default function Reviews(props) {
+export default function Reviews (props) {
   const [state, setState] = useState({ reviews: [], message: '', newReview: {} })
 
   const loadReviews = async () => {
@@ -36,7 +36,7 @@ export default function Reviews(props) {
   useEffect(loadReviews, [])
 
   const reviewEntries = state.reviews.map(review => {
-    return html`<${Review} key=${review.reviewee_email + '|' + review.reviewer_email} review=${review} />`
+    return html`<${Review} key=${review.revieweeEmail + '|' + review.reviewer_email} review=${review} />`
   })
   const reviews = reviewEntries.length > 0
     ? html`<ui5-list>${reviewEntries}</ui5-list>`

@@ -83,9 +83,9 @@ describe('postgres-review-storage', () => {
 
   describe('readAllFor', () => {
     it('should read all reviews', async () => {
-      const { reviewee_email } = FIRST_REVIEW
+      const { revieweeEmail } = FIRST_REVIEW
       const id = await storage.create(FIRST_REVIEW)
-      const reviews = await storage.readAllFor(reviewee_email)
+      const reviews = await storage.readAllFor(revieweeEmail)
       assert.equal(reviews.length, 1)
       assert.deepEqual(reviews, [
         {
@@ -98,13 +98,13 @@ describe('postgres-review-storage', () => {
 
   describe('getAverageRatingFor', () => {
     it('should get the average rating', async () => {
-      const { rating, reviewee_email } = SECOND_REVIEW
+      const { rating, revieweeEmail } = SECOND_REVIEW
       await Promise.all([
         storage.create(SECOND_REVIEW),
         storage.create(SECOND_REVIEW),
         storage.create(SECOND_REVIEW)
       ])
-      const { averageRating: actualAverageRating } = await storage.getAverageRatingFor(reviewee_email)
+      const { averageRating: actualAverageRating } = await storage.getAverageRatingFor(revieweeEmail)
       assert.equal(actualAverageRating, rating)
     })
   })
