@@ -4,7 +4,7 @@ import { html, useState, useEffect, useRef } from 'https://unpkg.com/htm@3.1.0/p
 import ReviewsHeader from './reviews-header.js'
 
 const NewReviewForm = function (props) {
-  const setReviewer = (event) => props.onUpdateReview({ ...props.review, reviewer_email: event.target.value })
+  const setReviewer = (event) => props.onUpdateReview({ ...props.review, reviewerEmail: event.target.value })
   const setComment = (event) => props.onUpdateReview({ ...props.review, comment: event.target.value })
   const setRating = (event) => props.onUpdateReview({ ...props.review, rating: parseFloat(event.target.value) })
 
@@ -12,7 +12,7 @@ const NewReviewForm = function (props) {
     <section>
       <div style='display: grid; margin: 1rem;'>
         <ui5-label required>Reviewer:</ui5-label>
-        <ui5-input oninput=${setReviewer}>${props.review.reviewer_email}</ui5-input>
+        <ui5-input oninput=${setReviewer}>${props.review.reviewerEmail}</ui5-input>
       </div>
       <div style='display: grid; margin: 1rem;'>
         <ui5-label required>Comment:</ui5-label>
@@ -38,7 +38,7 @@ const Review = function (props) {
   }
   return html`
     <ui5-li type='Inactive'
-            description=${props.review.reviewer_email}
+            description=${props.review.reviewerEmail}
             additional-text=${props.review.rating}
             additional-text-state=${ratingState()}>
       ${props.review.comment}
@@ -62,7 +62,7 @@ export default function ContactReviewss (props) {
     dialog.current.show()
   }
 
-  const reviewEntries = state.reviews.map(review => html`<${Review} key=${review.reviewer_email} review=${review} />`)
+  const reviewEntries = state.reviews.map(review => html`<${Review} key=${review.reviewerEmail} review=${review} />`)
   const reviews = reviewEntries.length > 0
     ? html`<ui5-list>${reviewEntries}</ui5-list>`
     : html`<ui5-title level='H5'>There are no reviews for this contact yet.</ui5-title>`

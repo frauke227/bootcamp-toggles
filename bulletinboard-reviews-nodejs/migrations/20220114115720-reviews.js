@@ -24,7 +24,7 @@ exports.up = async db => {
       length: 256,
       notNull: true
     },
-    reviewer_email: {
+    reviewerEmail: {
       type: 'string',
       length: 256,
       notNull: true

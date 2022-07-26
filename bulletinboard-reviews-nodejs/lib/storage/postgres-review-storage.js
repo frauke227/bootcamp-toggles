@@ -4,9 +4,9 @@ import NotFoundError from '../error/not-found-error.js'
 
 export default class PostgresReviewStorage {
   static EXISTS = 'SELECT EXISTS(SELECT 1 FROM reviews WHERE id=$1)'
-  static CREATE = 'INSERT INTO reviews ("revieweeEmail", reviewer_email, rating, comment) VALUES ($1, $2, $3, $4) RETURNING id'
-  static READ_ALL = 'SELECT id, "revieweeEmail", reviewer_email, rating, comment FROM reviews'
-  static READ_ALL_FOR = 'SELECT id, "revieweeEmail", reviewer_email, rating, comment FROM reviews WHERE "revieweeEmail" = $1'
+  static CREATE = 'INSERT INTO reviews ("revieweeEmail", "reviewerEmail", rating, comment) VALUES ($1, $2, $3, $4) RETURNING id'
+  static READ_ALL = 'SELECT id, "revieweeEmail", "reviewerEmail", rating, comment FROM reviews'
+  static READ_ALL_FOR = 'SELECT id, "revieweeEmail", "reviewerEmail", rating, comment FROM reviews WHERE "revieweeEmail" = $1'
   static GET_AVERAGE_RATING_FOR = 'SELECT AVG(rating) AS "averageRating" FROM reviews WHERE "revieweeEmail" = $1'
   static DELETE_ALL = 'DELETE FROM reviews'
 
@@ -31,28 +31,28 @@ export default class PostgresReviewStorage {
     }
   }
 
-  #checkAd ({ revieweeEmail, reviewer_email, rating, comment }) {
-    this.#log.debug('Checking review: %O', { revieweeEmail, reviewer_email, rating, comment })
+  #checkAd ({ revieweeEmail, reviewerEmail, rating, comment }) {
+    this.#log.debug('Checking review: %O', { revieweeEmail, reviewerEmail, rating, comment })
     if (!revieweeEmail || typeof revieweeEmail !== 'string' ||
-      !reviewer_email || typeof reviewer_email !== 'string' ||
+      !reviewerEmail || typeof reviewerEmail !== 'string' ||
       typeof rating !== 'number' || rating < 0 ||
       !comment || typeof comment !== 'string'
     ) {
-      const message = util.format('Invalid review: %O', { revieweeEmail, reviewer_email, rating, comment })
+      const message = util.format('Invalid review: %O', { revieweeEmail, reviewerEmail, rating, comment })
       throw new IllegalArgumentError(message)
     }
   }
 
-  async create ({ revieweeEmail = '', reviewer_email = '', rating = 0, comment = '' } = {}) {
+  async create ({ revieweeEmail = '', reviewerEmail = '', rating = 0, comment = '' } = {}) {
     try {
-      this.#log.debug('Creating review: %O', { revieweeEmail, reviewer_email, rating, comment })
-      this.#checkAd({ revieweeEmail, reviewer_email, rating, comment })
-      const { rows: [{ id }] } = await this.#pool.query(PostgresReviewStorage.CREATE, [revieweeEmail, reviewer_email, rating, comment])
-      this.#log.debug('Successfully created review: %O - %d', { revieweeEmail, reviewer_email, rating, comment }, id)
+      this.#log.debug('Creating review: %O', { revieweeEmail, reviewerEmail, rating, comment })
+      this.#checkAd({ revieweeEmail, reviewerEmail, rating, comment })
+      const { rows: [{ id }] } = await this.#pool.query(PostgresReviewStorage.CREATE, [revieweeEmail, reviewerEmail, rating, comment])
+      this.#log.debug('Successfully created review: %O - %d', { revieweeEmail, reviewerEmail, rating, comment }, id)
       return id
     } catch (error) {
       const { message } = error
-      this.#log.error('Error creating review: %O - %s', { revieweeEmail, reviewer_email, rating, comment }, message)
+      this.#log.error('Error creating review: %O - %s', { revieweeEmail, reviewerEmail, rating, comment }, message)
       throw error
     }
   }
