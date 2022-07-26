@@ -33,7 +33,7 @@ describe('average-rating-router', () => {
         .getAverageRatingFor
         .withArgs(reviewee_email)
         .resolves({
-          average_rating: expectedAverageRating
+          averageRating: expectedAverageRating
         })
       const { body } =
         await client
@@ -41,7 +41,7 @@ describe('average-rating-router', () => {
           .expect(200)
           .expect('Content-Type', /application\/json/)
       assert.deepEqual(body, {
-        average_rating: expectedAverageRating
+        averageRating: expectedAverageRating
       })
     })
   })

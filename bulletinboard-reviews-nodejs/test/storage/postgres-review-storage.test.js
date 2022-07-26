@@ -104,7 +104,7 @@ describe('postgres-review-storage', () => {
         storage.create(SECOND_REVIEW),
         storage.create(SECOND_REVIEW)
       ])
-      const { average_rating: actualAverageRating } = await storage.getAverageRatingFor(reviewee_email)
+      const { averageRating: actualAverageRating } = await storage.getAverageRatingFor(reviewee_email)
       assert.equal(actualAverageRating, rating)
     })
   })

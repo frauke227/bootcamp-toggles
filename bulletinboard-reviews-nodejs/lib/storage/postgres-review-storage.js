@@ -7,7 +7,7 @@ export default class PostgresReviewStorage {
   static CREATE = 'INSERT INTO reviews (reviewee_email, reviewer_email, rating, comment) VALUES ($1, $2, $3, $4) RETURNING id'
   static READ_ALL = 'SELECT id, reviewee_email, reviewer_email, rating, comment FROM reviews'
   static READ_ALL_FOR = 'SELECT id, reviewee_email, reviewer_email, rating, comment FROM reviews WHERE reviewee_email = $1'
-  static GET_AVERAGE_RATING_FOR = 'SELECT AVG(rating) AS average_rating FROM reviews WHERE reviewee_email = $1'
+  static GET_AVERAGE_RATING_FOR = 'SELECT AVG(rating) AS "averageRating" FROM reviews WHERE reviewee_email = $1'
   static DELETE_ALL = 'DELETE FROM reviews'
 
   #log = null
@@ -86,9 +86,9 @@ export default class PostgresReviewStorage {
   async getAverageRatingFor (reviewee_email) {
     try {
       this.#log.debug('Getting average rating for %s', reviewee_email)
-      const { rows: [{ average_rating }] } = await this.#pool.query(PostgresReviewStorage.GET_AVERAGE_RATING_FOR, [reviewee_email])
-      this.#log.debug('Successfully got average rating for %s - %d', reviewee_email, average_rating)
-      return { average_rating: parseFloat(average_rating) }
+      const { rows: [{ averageRating }] } = await this.#pool.query(PostgresReviewStorage.GET_AVERAGE_RATING_FOR, [reviewee_email])
+      this.#log.debug('Successfully got average rating for %s - %d', reviewee_email, averageRating)
+      return { averageRating: parseFloat(averageRating) }
     } catch (error) {
       const { message } = error
       this.#log.error('Error getting average rating for %s - %s', reviewee_email, message)
