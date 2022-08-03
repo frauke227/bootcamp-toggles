@@ -1,11 +1,13 @@
 // Static
 
+const db = process.env.NODE_ENV === 'test' ? 'postgres' : 'bulletinboard_reviews_dev'
+
 export default {
   app: {
     port: 9090
   },
   postgres: {
-    connectionString: 'postgresql://postgres:postgres@localhost:6543/postgres'
+    connectionString: `postgresql://postgres:postgres@localhost:6543/${db}`
   }
 }
 
@@ -35,7 +37,7 @@ export default {
 
 // const {
 //   PORT: port = 9090,
-//   POSTGRES_CONNECTION_STRING: connectionString = 'postgresql://postgres:postgres@localhost:6543/postgres'
+//   POSTGRES_CONNECTION_STRING: connectionString =  `postgresql://postgres:postgres@localhost:6543/${db}`
 // } = process.env
 
 // export default {

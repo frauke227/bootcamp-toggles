@@ -1,11 +1,13 @@
 // Local development
 
+const db = process.env.NODE_ENV === 'test' ? 'postgres' : 'bulletinboard_ads_dev'
+
 export default {
   app: {
     port: 8080
   },
   postgres: {
-    connectionString: 'postgresql://postgres:postgres@localhost:5432/postgres'
+    connectionString: `postgresql://postgres:postgres@localhost:5432/${db}`
   },
   reviews: {
     endpoint: 'http://localhost:9090'
@@ -43,7 +45,7 @@ export default {
 
 // const {
 //   PORT: port = 3000,
-//   POSTGRES_CONNECTION_STRING: connectionString = 'postgresql://postgres:postgres@localhost:5432/postgres',
+//   POSTGRES_CONNECTION_STRING: connectionString = `postgresql://postgres:postgres@localhost:5432/${db}`,
 //   REVIEWS_ENDPOINT: endpoint = 'http://localhost:9090'
 // } = process.env
 

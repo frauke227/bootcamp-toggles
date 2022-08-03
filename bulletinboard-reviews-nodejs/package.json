@@ -9,10 +9,10 @@
     "watch": "nodemon index.js",
     "prestart": "npm run db:migrate:up",
     "start": "node index.js",
-    "pretest": "npm run db:migrate:up",
-    "test": "mocha",
+    "pretest": "NODE_ENV=test node lib/storage/migrate.js up",
+    "test": "NODE_ENV=test mocha",
     "lint": "eslint lib test",
-    "db:start": "docker run --rm --platform linux/amd64 -e POSTGRES_HOST_AUTH_METHOD=trust -p 6543:5432 postgres:12-alpine",
+    "db:start": "./start-db.sh",
     "db:migrate:up": "node lib/storage/migrate.js up",
     "db:migrate:down": "node lib/storage/migrate.js down"
   },
