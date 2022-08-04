@@ -13,6 +13,7 @@
     "test": "NODE_ENV=test mocha",
     "lint": "eslint lib test",
     "db:start": "./start-db.sh",
+    "db:prune": "docker volume rm bb_reviews_local",
     "db:migrate:up": "node lib/storage/migrate.js up",
     "db:migrate:down": "node lib/storage/migrate.js down"
   },

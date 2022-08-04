@@ -64,6 +64,10 @@ The **API** can be accessed at
 
     starts the postgres database
 
+- `npm run db:prune`
+
+    resets the db state (schema & data)
+
 ## Implementation Details
 
 ### JavaScript Standard Style
