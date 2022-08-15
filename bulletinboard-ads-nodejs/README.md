@@ -59,6 +59,10 @@ The **API** can be accessed at [localhost:8080/api/v1/ads](http://localhost:8080
 
     starts the postgres database
 
+- `npm run db:prune`
+
+    resets the db state (schema & data)
+
 ## Implementation Details
 
 ### JavaScript Standard Style
