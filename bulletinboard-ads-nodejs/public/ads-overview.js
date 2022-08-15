@@ -16,7 +16,9 @@ const AdsCard = function (props) {
 
   const priceAndCurrency = () => `${props.ad.price} ${props.ad.currency}`
 
-  const navToDetails = () => location.hash = `#/show/${props.ad.id}`
+  const navToDetails = () => {
+    location.hash = `#/show/${props.ad.id}`
+  }
 
   return html`
     <ui5-card class='small' style='margin: 1%; position: relative; width: 12rem; height: 14rem;'>
@@ -30,14 +32,17 @@ const AdsCard = function (props) {
   `
 }
 
-export default function AdsOverview(props) {
+export default function AdsOverview (props) {
   const [state, setState] = useState({ ads: [], message: '' })
 
   useEffect(async () => {
     setState(await props.client.getAll())
   }, [])
 
-  const navToCreate = () => location.hash = '#/new'
+  const navToCreate = () => {
+    location.hash = '#/new'
+  }
+
   const clearMessage = () => setState(oldState => ({ ...oldState, message: '' }))
 
   const ads = state.ads.map(ad => html`<${AdsCard} key=${ad.id} ad=${ad} />`)

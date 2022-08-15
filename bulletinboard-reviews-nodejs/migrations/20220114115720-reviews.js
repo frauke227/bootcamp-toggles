@@ -19,12 +19,12 @@ exports.up = async db => {
       primaryKey: true,
       autoIncrement: true
     },
-    reviewee_email: {
+    revieweeEmail: {
       type: 'string',
       length: 256,
       notNull: true
     },
-    reviewer_email: {
+    reviewerEmail: {
       type: 'string',
       length: 256,
       notNull: true

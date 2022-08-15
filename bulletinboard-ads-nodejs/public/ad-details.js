@@ -57,7 +57,7 @@ const AdCard = function (props) {
     `
 }
 
-export default function AdDetails(props) {
+export default function AdDetails (props) {
   const [state, setState] = useState({ ad: { title: '', price: '', currency: '', contact: '' }, initialAd: {}, isEdit: false, message: '' })
 
   useEffect(async () => {

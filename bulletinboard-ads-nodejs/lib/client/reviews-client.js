@@ -16,7 +16,7 @@ export default class ReviewsClient {
   async getAverageRating (contact) {
     this.#log.debug('Getting average rating for contact: %s', contact)
     const response = await this.#fetch(`${this.#endpoint}/api/v1/averageRatings/${contact}`)
-    const { average_rating: averageRating } = await response.json()
+    const { averageRating } = await response.json()
     this.#log.debug('Successfully got average rating for contact: %s - %d', contact, averageRating)
     return averageRating
   }

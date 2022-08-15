@@ -35,7 +35,7 @@ describe('reviews-client', () => {
 
   it('should get the average rating for a contact', async () => {
     const contact = 'foo@bar.de'
-    const jsonStub = sandbox.stub().resolves({ average_rating: AVERAGE_RATING })
+    const jsonStub = sandbox.stub().resolves({ averageRating: AVERAGE_RATING })
     fetchStub
       .withArgs(`${REVIEWS_ENDPOINT}/api/v1/averageRatings/${contact}`)
       .resolves({
