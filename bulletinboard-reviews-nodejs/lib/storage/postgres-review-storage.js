@@ -31,7 +31,7 @@ export default class PostgresReviewStorage {
     }
   }
 
-  #checkAd ({ revieweeEmail, reviewerEmail, rating, comment }) {
+  #checkReview ({ revieweeEmail, reviewerEmail, rating, comment }) {
     this.#log.debug('Checking review: %O', { revieweeEmail, reviewerEmail, rating, comment })
     if (!revieweeEmail || typeof revieweeEmail !== 'string' ||
       !reviewerEmail || typeof reviewerEmail !== 'string' ||
@@ -46,7 +46,7 @@ export default class PostgresReviewStorage {
   async create ({ revieweeEmail = '', reviewerEmail = '', rating = 0, comment = '' } = {}) {
     try {
       this.#log.debug('Creating review: %O', { revieweeEmail, reviewerEmail, rating, comment })
-      this.#checkAd({ revieweeEmail, reviewerEmail, rating, comment })
+      this.#checkReview({ revieweeEmail, reviewerEmail, rating, comment })
       const { rows: [{ id }] } = await this.#pool.query(PostgresReviewStorage.CREATE, [revieweeEmail, reviewerEmail, rating, comment])
       this.#log.debug('Successfully created review: %O - %d', { revieweeEmail, reviewerEmail, rating, comment }, id)
       return id
