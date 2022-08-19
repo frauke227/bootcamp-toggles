@@ -26,7 +26,7 @@ spec:
             - name: POSTGRES_CONNECTION_STRING
               value: postgres://slonik:topsekret@bulletinboard-ads-db/ads
             - name: REVIEWS_ENDPOINT
-              value: https://app.ingress.<CLUSTER>.<PROJECT>.shoot.canary.k8s-hana.ondemand.com/reviews
+              value: https://rws.ingress.<CLUSTER>.<PROJECT>.shoot.canary.k8s-hana.ondemand.com
 ---
 apiVersion: v1
 kind: Service
@@ -46,14 +46,13 @@ kind: Ingress
 metadata:
   annotations:
     cert.gardener.cloud/purpose: managed
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
   name: bulletinboard-ads
 spec:
   rules:
-    - host: app.ingress.<CLUSTER>.<PROJECT>.shoot.canary.k8s-hana.ondemand.com
+    - host: ads.ingress.<CLUSTER>.<PROJECT>.shoot.canary.k8s-hana.ondemand.com
       http:
         paths:
-          - path: /ads(/|$)(.*)
+          - path: /
             pathType: Prefix
             backend:
               service:
@@ -62,5 +61,13 @@ spec:
                   number: 8080
   tls:
     - hosts:
-        - app.ingress.<CLUSTER>.<PROJECT>.shoot.canary.k8s-hana.ondemand.com
-      secretName: app-certs
+        - ads.ingress.<CLUSTER>.<PROJECT>.shoot.canary.k8s-hana.ondemand.com
+      secretName: cert-a
+---
+apiVersion: cert.gardener.cloud/v1alpha1
+kind: Certificate
+metadata:
+  name: cert-a
+  namespace: default
+spec:
+  commonName: ads.ingress.cnb.cndj-md.shoot.canary.k8s-hana.ondemand.com

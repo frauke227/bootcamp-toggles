@@ -44,14 +44,13 @@ kind: Ingress
 metadata:
   annotations:
     cert.gardener.cloud/purpose: managed
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
   name: bulletinboard-reviews
 spec:
   rules:
-    - host: app.ingress.<CLUSTER>.<PROJECT>.shoot.canary.k8s-hana.ondemand.com
+    - host: rws.ingress.<CLUSTER>.<PROJECT>.shoot.canary.k8s-hana.ondemand.com
       http:
         paths:
-          - path: /reviews(/|$)(.*)
+          - path: /
             pathType: Prefix
             backend:
               service:
@@ -60,5 +59,13 @@ spec:
                   number: 9090
   tls:
     - hosts:
-        - app.ingress.<CLUSTER>.<PROJECT>.shoot.canary.k8s-hana.ondemand.com
-      secretName: app-certs
+        - rws.ingress.<CLUSTER>.<PROJECT>.shoot.canary.k8s-hana.ondemand.com
+      secretName: cert-r
+---
+apiVersion: cert.gardener.cloud/v1alpha1
+kind: Certificate
+metadata:
+  name: cert-r
+  namespace: default
+spec:
+  commonName: rws.ingress.cnb.cndj-md.shoot.canary.k8s-hana.ondemand.com
