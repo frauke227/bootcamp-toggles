@@ -62,12 +62,12 @@ spec:
   tls:
     - hosts:
         - ads.ingress.<CLUSTER>.<PROJECT>.shoot.canary.k8s-hana.ondemand.com
-      secretName: cert-a
+      secretName: ads-cert
 ---
 apiVersion: cert.gardener.cloud/v1alpha1
 kind: Certificate
 metadata:
-  name: cert-a
+  name: ads-cert
   namespace: default
 spec:
-  commonName: ads.ingress.cnb.cndj-md.shoot.canary.k8s-hana.ondemand.com
+  commonName: ads.ingress.<CLUSTER>.<PROJECT>.shoot.canary.k8s-hana.ondemand.com
