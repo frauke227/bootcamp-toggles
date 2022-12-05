@@ -17,6 +17,9 @@ export default class PostgresAdStorage {
   constructor (pool, logger) {
     this.#pool = pool
     this.#log = logger.child({ module: 'postgres-ad-storage' })
+    this.#pool.on('error', ({ message }) => {
+      this.#log.error('Error raised by pg client: %s', message)
+    })
   }
 
   async #checkId (id) {
