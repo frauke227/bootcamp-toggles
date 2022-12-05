@@ -15,7 +15,6 @@ const storage = new PostgresAdStorage(pool, logger)
 const reviewsClient = new ReviewsClient(fetch, endpoint, logger)
 const app = application(storage, reviewsClient, logger)
 
-
 app
   .listen(port, () => log.info('Server is listening on http://localhost:%d', port))
   .on('error', ({ message }) => log.error('Error starting server: %s', message))

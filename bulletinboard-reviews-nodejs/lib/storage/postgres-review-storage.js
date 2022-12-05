@@ -16,6 +16,9 @@ export default class PostgresReviewStorage {
   constructor (pool, logger) {
     this.#log = logger.child({ module: 'postgres-review-storage' })
     this.#pool = pool
+    this.#pool.on('error', ({ message }) => {
+      this.#log.error('Error raised by pg client: %s', message)
+    })
   }
 
   async #checkId (id) {
