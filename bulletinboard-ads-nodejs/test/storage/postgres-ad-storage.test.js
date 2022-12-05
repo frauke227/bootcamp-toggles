@@ -1,7 +1,7 @@
 import assert from 'assert/strict'
 import util from 'util'
 import sinon from 'sinon'
-import config from '../../lib/util/config.js'
+import { config } from '../config-test.js'
 import logger from '../../lib/util/logger.js'
 import Pool from '../../lib/storage/pool.js'
 import PostgresAdStorage from '../../lib/storage/postgres-ad-storage.js'

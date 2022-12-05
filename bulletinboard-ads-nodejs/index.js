@@ -1,10 +1,12 @@
 import fetch from 'node-fetch'
-import config from './lib/util/config.js'
 import Pool from './lib/storage/pool.js'
 import PostgresAdStorage from './lib/storage/postgres-ad-storage.js'
 import ReviewsClient from './lib/client/reviews-client.js'
 import logger from './lib/util/logger.js'
 import application from './lib/application.js'
+
+const configFile = process.argv[2]
+const { config } = (await import(configFile))
 
 const { app: { port }, postgres, reviews: { endpoint } } = config
 

@@ -7,15 +7,17 @@
   "scripts": {
     "prewatch": "npm run db:migrate:up",
     "watch": "nodemon index.js",
-    "prestart": "npm run db:migrate:up",
-    "start": "node index.js",
-    "pretest": "NODE_ENV=test node lib/storage/migrate.js up",
-    "test": "NODE_ENV=test mocha",
+    "prestart": "node lib/storage/migrate.js up ../util/config-cf.js",
+    "start": "node index.js ./lib/util/config-cf.js",
+    "prestart:dev": "npm run db:migrate:up",
+    "start:dev": "node index.js ./lib/util/config-dev.js",
+    "pretest": "node lib/storage/migrate.js up ../../test/config-test.js",
+    "test": "mocha",
     "lint": "eslint .",
     "db:start": "./start-db.sh",
     "db:prune": "docker volume rm bb_ads_local",
-    "db:migrate:up": "node lib/storage/migrate.js up",
-    "db:migrate:down": "node lib/storage/migrate.js down"
+    "db:migrate:up": "node lib/storage/migrate.js up ../util/config-dev.js",
+    "db:migrate:down": "node lib/storage/migrate.js down ../util/config-dev.js"
   },
   "repository": {
     "type": "git",

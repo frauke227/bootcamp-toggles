@@ -1,9 +1,10 @@
 import dbmigrate from 'db-migrate'
-import config from '../util/config.js'
 
 const migrate = async () => {
   try {
-    const [action, ...args] = process.argv.slice(2)
+    const action = process.argv[2]
+    const configFile = process.argv[3]
+    const { config } = (await import(configFile))
     const dbm = dbmigrate.getInstance(true, {
       env: 'default',
       config: {
@@ -13,7 +14,7 @@ const migrate = async () => {
         }
       }
     })
-    await dbm[action](...args)
+    await dbm[action]()
   } catch ({ stack }) {
     console.error(stack)
     process.exit(1)
