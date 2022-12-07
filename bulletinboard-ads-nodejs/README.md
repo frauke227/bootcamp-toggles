@@ -2,9 +2,6 @@
 
 # Bulletinboard Ads
 
-## Ad-Blocker
-**If the UI does not load, please make sure your ad-blocker is not accidentially blocking parts of the application ;-)**
-
 ## Prerequisites
 
 - [**Git** client](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
