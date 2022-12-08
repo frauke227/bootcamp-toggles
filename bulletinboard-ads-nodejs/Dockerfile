@@ -15,4 +15,4 @@ COPY public ./public/
 
 EXPOSE 8080
 
-CMD [ "npm", "start" ]
+CMD [ "node", "index-k8s.js" ]

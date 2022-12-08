@@ -1,4 +1,5 @@
 import cfenv from 'cfenv'
+import main from './lib/main.js'
 
 const appEnv = cfenv.getAppEnv({
   vcapFile: 'vcap.json'
@@ -10,7 +11,7 @@ const { uri: connectionString, sslcert: cert, sslrootcert: ca } = appEnv.getServ
 
 const { REVIEWS_ENDPOINT: endpoint = 'http://localhost:9090' } = process.env
 
-export const config = {
+const config = {
   app: {
     port
   },
@@ -22,3 +23,5 @@ export const config = {
     endpoint
   }
 }
+
+main(config)

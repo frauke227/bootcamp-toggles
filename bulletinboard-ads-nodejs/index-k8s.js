@@ -1,3 +1,5 @@
+import main from './lib/main.js'
+
 const {
   PORT: port = 3000,
   POSTGRES_CONNECTION_STRING:
@@ -5,7 +7,7 @@ const {
   REVIEWS_ENDPOINT: endpoint = 'http://localhost:9090'
 } = process.env
 
-export const config = {
+const config = {
   app: {
     port
   },
@@ -16,3 +18,5 @@ export const config = {
     endpoint
   }
 }
+
+main(config)

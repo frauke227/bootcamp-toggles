@@ -28,7 +28,7 @@ Please run:
 
 1. `npm start`
 
-    to start the server
+    to start the server using dev environment
 
 The **UI** will be availabe at [localhost:8080](http://localhost:8080).
 
@@ -38,7 +38,7 @@ The **API** can be accessed at [localhost:8080/api/v1/ads](http://localhost:8080
 
 - `npm start`
 
-    starts the server
+    starts the server using dev environment
 
 - `npm test`
 
@@ -118,13 +118,11 @@ The files `vcap.json` and `manifest.json` are only relevant for **Cloud Foundry*
 
 Whereas `Dockerfile` and the `.k8s` directory are only relevant for **Kubernetes** deployment.
 
-Also file `lib/util/config.js` needs to be adjusted for the deployment target.
-
 ### Cloud Foundry
 
-1. Install the [cfenv](https://github.com/cloudfoundry-community/node-cfenv) module: `npm i cfenv`.
+In `manifest.yml` you can find the startup script `index-cf.js`, which uses an npm module called `cfenv` to retrieve the configuration from the CF environment.
 
-1. Enable the Cloud Foundry specific config in file `lib/util/config.js`.
+1. Install the [cfenv](https://github.com/cloudfoundry-community/node-cfenv) module: `npm i cfenv`.
 
 1. Make sure to create a *Cloud Foundry (Trial) Account*.
 
@@ -142,7 +140,7 @@ For a detailed guide please refer to [Cloud Foundry Basics (Node.js)](https://pa
 
 ### Kubernetes
 
-1. Enable the Kubernetes specific config in file `lib/util/config.js`.
+In the `Dockerfile` you can find the startup command `index-k8s.js`, which will retrieve the configuration from the Kubernetes environment.
 
 1. Use `docker login` to login your *Docker Registry*.
 
