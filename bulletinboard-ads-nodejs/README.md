@@ -72,7 +72,7 @@ Have a look at file `.eslintrc.json`.
 
 We are using [db-migrate](https://github.com/db-migrate/node-db-migrate) (with [db-migrate-pg](https://github.com/db-migrate/pg)) for running database migrations, e.g. before starting the server.
 
-Have a look at the `migrations` folder, file `lib/store/migrate.js`, and the `db:migrate:up` and `db:migrate:down` scripts in file `package.json`.
+Have a look at the `migrations` folder, file `migrate.js`, and the `db:migrate:up` and `db:migrate:down` scripts in file `package.json`.
 
 ### Express Router
 
