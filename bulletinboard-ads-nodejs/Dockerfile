@@ -8,7 +8,7 @@ COPY package*.json ./
 
 RUN npm ci --only=production
 
-COPY index.js ./
+COPY index-k8s.js ./
 COPY lib ./lib/
 COPY migrations ./migrations/
 COPY public ./public/
