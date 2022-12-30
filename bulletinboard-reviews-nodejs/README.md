@@ -38,10 +38,6 @@ The **API** can be accessed at
 
 - [localhost:9090/api/v1/averageRatings](http://localhost:9090/api/v1/averageRatings)
 
-## Ad-Blocker
-**If the UI does not load, please make sure your ad-blocker is not accidentially blocking parts of the application ;-)**
-
-
 ## Available Scripts
 
 - `npm start`
@@ -80,25 +76,19 @@ Have a look at file `.eslintrc.json`.
 
 We are using [db-migrate](https://github.com/db-migrate/node-db-migrate) (with [db-migrate-pg](https://github.com/db-migrate/pg)) for running database migrations, e.g. before starting the server.
 
-Have a look at the `migrations` folder, file `lib/store/migrate.js`, and the `db:migrate:up` and `db:migrate:down` scripts in file `package.json`.
+Have a look at the `migrations` folder and the `db:migrate:up` and `db:migrate:down` scripts in file `package.json`.
 
 ### Express Router
 
 We are using an [express.Router](https://expressjs.com/en/4x/api.html#express.router) instance for encapsulating the reviews API.
 
-Have a look at the
-
-- `lib/router/ad-router.js`
-
-- `lib/router/average-rating-router.js`
-
-files.
+Have a look at the files in directory `lib/router`.
 
 ### Sinon Stubs
 
 We are using [Sinon Stubs](https://sinonjs.org/releases/latest/stubs/) for decoupling and test isolation.
 
-Have a look at the `test` folder, e.g. file `test/storage/postgres-ad-storage.test.js`.
+Have a look at the `test` folder, e.g. file `test/storage/postgres-review-storage.test.js`.
 
 ## Additional Features
 
@@ -126,13 +116,11 @@ The files `vcap.json` and `manifest.json` are only relevant for **Cloud Foundry*
 
 Whereas `Dockerfile` and the `.k8s` directory are only relevant for **Kubernetes** deployment.
 
-Also file `lib/util/config.js` needs to be adjusted for the deployment target.
-
 ### Cloud Foundry
 
-1. Install the [cfenv](https://github.com/cloudfoundry-community/node-cfenv) module: `npm i cfenv`.
+In `manifest.yml` you can find the startup script `index-cf.js`, which uses an npm module called `cfenv` to retrieve the configuration from the CF environment.
 
-1. Enable the Cloud Foundry specific config in file `lib/util/config.js`.
+1. Install the [cfenv](https://github.com/cloudfoundry-community/node-cfenv) module: `npm i cfenv`.
 
 1. Make sure to create a *Cloud Foundry (Trial) Account*.
 
@@ -150,7 +138,7 @@ For a detailed guide please refer to [Cloud Foundry Basics (Node.js)](https://pa
 
 ### Kubernetes
 
-1. Enable the Kubernetes specific config in file `lib/util/config.js`.
+In the `Dockerfile` you can find the startup command `index-k8s.js`, which will retrieve the configuration from the Kubernetes environment.
 
 1. Use `docker login` to login your *Docker Registry*.
 
