@@ -11,6 +11,8 @@ export default function Client () {
   this.create = async (review) => {
     const headers = { 'Content-Type': 'application/json' }
     const response = await fetch('./api/v1/reviews', { method: 'post', headers, body: JSON.stringify(review) })
-    return (response.status === 409) ? 'Conflict: a review from this person already exists.' : ''
+    return (response.status === 201)
+      ? { message: '' }
+      : { message: await response.text() }
   }
 }

@@ -12,15 +12,15 @@ const NewReviewForm = function (props) {
     <section>
       <div style='display: grid; margin: 1rem;'>
         <ui5-label required>Reviewer:</ui5-label>
-        <ui5-input oninput=${setReviewer}>${props.review.reviewerEmail}</ui5-input>
+        <ui5-input oninput=${setReviewer} value=${props.review.reviewerEmail}></ui5-input>
       </div>
       <div style='display: grid; margin: 1rem;'>
         <ui5-label required>Comment:</ui5-label>
-        <ui5-input oninput=${setComment}>${props.review.comment}</ui5-input>
+        <ui5-input oninput=${setComment} value=${props.review.comment}></ui5-input>
       </div>
       <div style='display: grid; margin: 1rem;'>
         <ui5-label required>Rating:</ui5-label>
-        <ui5-input type='Number' oninput=${setRating}>${props.review.rating}</ui5-input>
+        <ui5-input type='Number' oninput=${setRating} value=${props.review.rating}></ui5-input>
       </div>
     </section>
   `
@@ -47,8 +47,10 @@ const Review = function (props) {
 }
 
 // REVISE this needs revision, find a way to cleanly separate the entire dialog
-export default function ContactReviewss (props) {
-  const [state, setState] = useState({ reviews: [], message: '', newReview: {}, messageFromCreation: '' })
+export default function ContactReviews (props) {
+  const newReview = () => ({ revieweeEmail: props.contact, reviewerEmail: '', comment: '', rating: 0 })
+
+  const [state, setState] = useState({ reviews: [], message: '', newReview: newReview(), messageFromCreation: '' })
   const dialog = useRef({})
 
   const loadReviews = async () => {
@@ -58,7 +60,7 @@ export default function ContactReviewss (props) {
   useEffect(loadReviews, [])
 
   const addReview = () => {
-    setState(oldState => ({ ...oldState, newReview: { revieweeEmail: props.contact } }))
+    setState(oldState => ({ ...oldState, newReview: newReview() }))
     dialog.current.show()
   }
 
@@ -84,10 +86,9 @@ export default function ContactReviewss (props) {
     : ''
   const updateNewReview = (newReview) => { setState(oldState => ({ ...oldState, newReview })) }
   const saveNewReview = async () => {
-    const messageFromCreation = await props.client.create(state.newReview)
-    if (messageFromCreation) {
-      setState(oldState => ({ ...oldState, messageFromCreation }))
-    } else {
+    const createReviewResponse = await props.client.create(state.newReview)
+    setState(oldState => ({ ...oldState, messageFromCreation: createReviewResponse.message }))
+    if (!createReviewResponse.message) {
       await loadReviews()
       dialog.current.close()
     }
