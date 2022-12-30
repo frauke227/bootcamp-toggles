@@ -1,21 +1,14 @@
 import main from './lib/main.js'
 
-const {
-  PORT: port = 3000,
-  POSTGRES_CONNECTION_STRING:
-  connectionString = 'postgresql://postgres:postgres@localhost:5432/bulletinboard_ads_dev',
-  REVIEWS_ENDPOINT: endpoint = 'http://localhost:9090'
-} = process.env
-
 const config = {
   app: {
-    port
+    port: process.env.PORT
   },
   postgres: {
-    connectionString
+    connectionString: process.env.POSTGRES_CONNECTION_STRING
   },
   reviews: {
-    endpoint
+    endpoint: process.env.REVIEWS_ENDPOINT
   }
 }
 
