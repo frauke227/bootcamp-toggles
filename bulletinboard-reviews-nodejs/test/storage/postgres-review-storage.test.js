@@ -1,23 +1,24 @@
 import assert from 'assert/strict'
 import util from 'util'
 import sinon from 'sinon'
-import config from '../../lib/util/config.js'
 import logger from '../../lib/util/logger.js'
 import Pool from '../../lib/storage/pool.js'
 import PostgresReviewStorage from '../../lib/storage/postgres-review-storage.js'
 import IllegalArgumentError from '../../lib/error/illegal-argument-error.js'
 import { FIRST_REVIEW, SECOND_REVIEW } from '../reviews.js'
+import migrate from '../../lib/storage/migrate-api.js'
 
 describe('postgres-review-storage', () => {
   const sandbox = sinon.createSandbox()
+  const connectionString = 'postgresql://postgres:postgres@localhost:6543/postgres'
 
   let loggerStub = null
   let pool = null
   let storage = null
 
-  before(() => {
-    const { postgres } = config
-    pool = new Pool(postgres)
+  before(async () => {
+    await migrate({ connectionString }).up()
+    pool = new Pool({ connectionString })
   })
 
   beforeEach(() => {

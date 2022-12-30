@@ -11,7 +11,7 @@ export default async function main (config) {
 
   const log = logger.child({ module: 'server' })
 
-  await migrate(postgres.connectionString).up()
+  await migrate(postgres).up()
   const pool = new Pool(postgres)
   const storage = new PostgresAdStorage(pool, logger)
   const reviewsClient = new ReviewsClient(fetch, endpoint, logger)

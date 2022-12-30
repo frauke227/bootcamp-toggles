@@ -1,7 +1,7 @@
-import logger from './lib/util/logger.js'
-import Pool from './lib/storage/pool.js'
-import PostgresReviewStorage from './lib/storage/postgres-review-storage.js'
-import application from './lib/application.js'
+import logger from './util/logger.js'
+import Pool from './storage/pool.js'
+import PostgresReviewStorage from './storage/postgres-review-storage.js'
+import application from './application.js'
 import migrate from './storage/migrate-api.js'
 
 export default async function main (config) {
@@ -9,7 +9,7 @@ export default async function main (config) {
 
   const log = logger.child({ module: 'server' })
 
-  await migrate(postgres.connectionString).up()
+  await migrate(postgres).up()
   const pool = new Pool(postgres)
   const storage = new PostgresReviewStorage(pool, logger)
   const app = application(storage, logger)
