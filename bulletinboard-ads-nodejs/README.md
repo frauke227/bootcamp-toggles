@@ -114,7 +114,7 @@ The project contains a **hybrid** configuration for deploying to both **Cloud Fo
 
 Meaning some files are only relevant for one or the other.
 
-The files `vcap.json` and `manifest.json` are only relevant for **Cloud Foundry** deployment.
+The file `manifest.yml` is only relevant for **Cloud Foundry** deployment.
 
 Whereas `Dockerfile` and the `.k8s` directory are only relevant for **Kubernetes** deployment.
 
