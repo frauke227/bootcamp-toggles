@@ -18,7 +18,7 @@ describe('postgres-ad-storage', () => {
   let storage = null
 
   before(async () => {
-    await migrate('up', connectionString)
+    await migrate(connectionString).up()
     pool = new Pool({ connectionString })
   })
 
