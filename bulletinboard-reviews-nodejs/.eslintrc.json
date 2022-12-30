@@ -10,8 +10,5 @@
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module"
-  },
-  "rules": {
-    "camelcase": "off"
   }
 }

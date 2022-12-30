@@ -6,7 +6,7 @@
   "scripts": {
     "watch": "nodemon index-dev.js",
     "start": "node index-dev.js",
-    "test": "mocha",
+    "test": "mocha --recursive",
     "lint": "eslint .",
     "db:start": "./start-db.sh",
     "db:prune": "docker volume rm bb_ads_local",

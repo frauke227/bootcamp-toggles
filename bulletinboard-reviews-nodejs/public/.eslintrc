@@ -3,10 +3,9 @@
     "es2021": true,
     "browser": true
   },
-  "extends": "eslint:recommended",
+  "extends": "standard",
   "parserOptions": {
     "ecmaVersion": 13,
     "sourceType": "module"
-  },
-  "rules": {}
+  }
 }
