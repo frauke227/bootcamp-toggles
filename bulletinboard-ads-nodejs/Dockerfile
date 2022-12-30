@@ -8,11 +8,11 @@ COPY package*.json ./
 
 RUN npm ci --only=production
 
-COPY index.js ./
+COPY index-k8s.js ./
 COPY lib ./lib/
 COPY migrations ./migrations/
 COPY public ./public/
 
 EXPOSE 8080
 
-CMD [ "npm", "start" ]
+CMD [ "node", "index-k8s.js" ]

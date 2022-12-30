@@ -2,20 +2,16 @@
   "name": "bulletinboard-reviews",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "type": "module",
   "scripts": {
-    "prewatch": "npm run db:migrate:up",
-    "watch": "nodemon index.js",
-    "prestart": "npm run db:migrate:up",
-    "start": "node index.js",
-    "pretest": "NODE_ENV=test node lib/storage/migrate.js up",
-    "test": "NODE_ENV=test mocha",
-    "lint": "eslint lib test",
+    "watch": "nodemon index-dev.js",
+    "start": "node index-dev.js",
+    "test": "mocha",
+    "lint": "eslint .",
     "db:start": "./start-db.sh",
     "db:prune": "docker volume rm bb_reviews_local",
-    "db:migrate:up": "node lib/storage/migrate.js up",
-    "db:migrate:down": "node lib/storage/migrate.js down"
+    "db:migrate:up": "node migrate.js up",
+    "db:migrate:down": "node migrate.js down"
   },
   "engines": {
     "node": ">=16"

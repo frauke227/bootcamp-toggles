@@ -7,3 +7,4 @@ test
 .mocharc.json
 Dockerfile
 README.md
+node_modules

@@ -1,7 +1,7 @@
 applications:
   - name: bulletinboard-ads
     memory: 128MB
-    command: npm start
+    command: node index-cf.js
     random-route: true
     buildpacks:
       - https://github.com/cloudfoundry/nodejs-buildpack
