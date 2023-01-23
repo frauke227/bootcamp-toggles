@@ -2,7 +2,7 @@
 
 docker volume create bb_reviews_local
 
-docker build -t bulletinboard-reviews-postgres - <<EOT
+docker build --platform linux/amd64 -t bulletinboard-reviews-postgres - <<EOT
 FROM postgres:12-alpine
 RUN echo "CREATE DATABASE bulletinboard_reviews_dev" >> /docker-entrypoint-initdb.d/init.sql
 EOT
