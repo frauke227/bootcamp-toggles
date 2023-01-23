@@ -2,7 +2,7 @@
 
 docker volume create bb_ads_local
 
-docker build -t bulletinboard-ads-postgres - <<EOT
+docker build --platform linux/amd64 -t bulletinboard-ads-postgres - <<EOT
 FROM postgres:12-alpine
 RUN echo "CREATE DATABASE bulletinboard_ads_dev" >> /docker-entrypoint-initdb.d/init.sql
 EOT
