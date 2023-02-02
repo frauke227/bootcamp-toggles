@@ -1,6 +1,6 @@
 #!/bin/sh
 
-docker volume create bb_ads_local
+docker volume create bb_ads_local_nodejs
 
 docker build --platform linux/amd64 -t bulletinboard-ads-postgres - <<EOT
 FROM postgres:12-alpine
@@ -11,7 +11,7 @@ docker run \
       --rm \
       --platform linux/amd64 \
       -e POSTGRES_HOST_AUTH_METHOD=trust \
-      -v bb_ads_local:/var/lib/postgresql/data \
+      -v bb_ads_local_nodejs:/var/lib/postgresql/data \
       --name postgres-bulletinboard-ads \
       -p 5432:5432 \
       bulletinboard-ads-postgres

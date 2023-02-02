@@ -1,6 +1,6 @@
 #!/bin/sh
 
-docker volume create bb_reviews_local
+docker volume create bb_reviews_local_nodejs
 
 docker build --platform linux/amd64 -t bulletinboard-reviews-postgres - <<EOT
 FROM postgres:12-alpine
@@ -11,7 +11,7 @@ docker run \
       --rm \
       --platform linux/amd64 \
       -e POSTGRES_HOST_AUTH_METHOD=trust \
-      -v bb_reviews_local:/var/lib/postgresql/data \
+      -v bb_reviews_local_nodejs:/var/lib/postgresql/data \
       --name postgres-bulletinboard-reviews \
       -p 6543:5432 \
       bulletinboard-reviews-postgres

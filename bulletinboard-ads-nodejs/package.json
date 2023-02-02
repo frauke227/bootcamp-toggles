@@ -9,7 +9,7 @@
     "test": "mocha --recursive",
     "lint": "eslint .",
     "db:start": "./start-db.sh",
-    "db:prune": "docker volume rm bb_ads_local",
+    "db:prune": "docker volume rm bb_ads_local_nodejs",
     "db:migrate:up": "node migrate.js up",
     "db:migrate:down": "node migrate.js down"
   },
