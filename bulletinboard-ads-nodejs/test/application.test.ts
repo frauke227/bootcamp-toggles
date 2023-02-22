@@ -1,27 +1,30 @@
 import assert from 'assert/strict'
 import { STATUS_CODES } from 'http'
-import sinon from 'sinon'
+import sinon, { SinonStubbedInstance } from 'sinon'
+import { Logger } from 'winston'
 import supertest from 'supertest'
 import { readFile } from 'fs/promises'
 import { join } from 'path'
-import logger from '../lib/util/logger.js'
-import PostgresAdStorage from '../lib/storage/postgres-ad-storage.js'
-import application from '../lib/application.js'
+import logger from '../src/lib/util/logger.js'
+import PostgresAdStorage from '../src/lib/storage/postgres-ad-storage.js'
+import application from '../src/lib/application.js'
+import ReviewsClient from '../src/lib/client/reviews-client.js'
 
 describe('application', () => {
   const sandbox = sinon.createSandbox()
-
-  let loggerStub = null
-  let storageStub = null
-  let client = null
+  let loggerStub: SinonStubbedInstance<Logger>
+  let storageStub: SinonStubbedInstance<PostgresAdStorage>
+  let reviewsClientStub: SinonStubbedInstance<ReviewsClient>
+  let client: supertest.SuperTest<supertest.Test>
 
   beforeEach(() => {
     loggerStub = sandbox.stub(logger)
     if (loggerStub.child) {
       loggerStub.child.returnsThis()
     }
+    reviewsClientStub = sandbox.createStubInstance(ReviewsClient)
     storageStub = sandbox.createStubInstance(PostgresAdStorage)
-    const app = application(storageStub, null, loggerStub)
+    const app = application(storageStub, reviewsClientStub, loggerStub)
     client = supertest(app)
   })
 
@@ -57,7 +60,7 @@ describe('application', () => {
       for (const method of methods) {
         const code = 501
         const { text } =
-          await client[method]('/not/implemented')
+          await (client as any)[method]('/not/implemented')
             .expect(code)
             .expect('Content-Type', /text\/plain/)
         assert.equal(text, STATUS_CODES[code])

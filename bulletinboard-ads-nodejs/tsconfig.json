@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "module": "Node16",
+    "outDir": "dist",
+    "rootDir": ".",
+    "target": "ES2020",
+    "strict": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "lib": [
+      "ES2020"
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts"
+  ],
+  // Most ts-node options can be specified here using their programmatic names.
+  "ts-node": {
+    "esm": true,
+    "compilerOptions": {
+      // compilerOptions specified here will override those declared below,
+      // but *only* in ts-node.  Useful if you want ts-node and tsc to use
+      // different options with a single tsconfig.json.
+    },
+  }
+}

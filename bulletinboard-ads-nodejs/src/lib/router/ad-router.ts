@@ -1,23 +1,44 @@
-import express from 'express'
+import express, { Request, Response, NextFunction } from 'express'
+import { Logger } from 'winston'
+import { validateId, validateAd, AdPayload, Ad, Id } from '../validation/validate.js'
+import ReviewsClient from '../client/reviews-client.js'
+import PostgresAdStorage from '../storage/postgres-ad-storage.js'
 
-export default (storage, reviewsClient, logger) => {
-  const parseId = () => (req, res, next) => {
-    if (req.params.id) {
-      req.params.id = parseInt(req.params.id)
+export default (storage: PostgresAdStorage, reviewsClient: ReviewsClient, logger: Logger) => {
+  const validateAndParseId = () => (req: Request<{ id: Id }>, res: Response, next: NextFunction) => {
+    try {
+      const id = req.params.id
+      logger.debug('Checking id: %s', id)
+      const validatedId = validateId(id)
+      req.params.id = validatedId
+      next()
+    } catch (err) {
+      next(err)
     }
-    next()
   }
 
-  const getAverageContactRating = async ({ contact }) => {
+  const validateAndParseAd = () => (req: Request<{ id: Id }>, res: Response, next: NextFunction) => {
+    try {
+      const ad = req.body
+      // logger.debug('Checking id: %s',add)
+      const validatedAd = validateAd(ad)
+      req.body = validatedAd
+      next()
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  const getAverageContactRating = async ({ contact }: AdPayload) => {
     const averageContactRating = await reviewsClient.getAverageRating(contact)
     return averageContactRating
   }
 
-  const getReviewsUrl = ({ contact }) => {
+  const getReviewsUrl = ({ contact }: AdPayload) => {
     return `${reviewsClient.getEndpoint()}/#/reviews/${contact}`
   }
 
-  const getTransientProps = async ad => {
+  const getTransientProps = async (ad: Ad) => {
     return {
       averageContactRating: await getAverageContactRating(ad),
       reviewsUrl: getReviewsUrl(ad)
@@ -26,7 +47,7 @@ export default (storage, reviewsClient, logger) => {
 
   const router = express.Router()
 
-  router.post('/', express.json(), async (req, res, next) => {
+  router.post('/', express.json(), validateAndParseAd(), async (req, res, next) => {
     const { body } = req
     try {
       const id = await storage.create(body)
@@ -60,7 +81,7 @@ export default (storage, reviewsClient, logger) => {
     }
   })
 
-  router.get('/:id', parseId(), async (req, res, next) => {
+  router.get('/:id', validateAndParseId(), async (req, res, next) => {
     try {
       const { params: { id } } = req
       let ad = await storage.read(id)
@@ -76,7 +97,7 @@ export default (storage, reviewsClient, logger) => {
     }
   })
 
-  router.put('/:id', express.json(), parseId(), async (req, res, next) => {
+  router.put<{ id: Id }>('/:id', express.json(), validateAndParseAd(), validateAndParseId(), async (req, res, next) => {
     try {
       const { params: { id }, body } = req
       await storage.update(id, body)
@@ -99,10 +120,10 @@ export default (storage, reviewsClient, logger) => {
     }
   })
 
-  router.delete('/:id', parseId(), async (req, res, next) => {
+  router.delete('/:id', validateAndParseId(), async (req, res, next) => {
     try {
-      const { params: { id }, body } = req
-      await storage.delete(id, body)
+      const { params: { id } } = req
+      await storage.delete(id)
       res
         .status(200)
         .json()

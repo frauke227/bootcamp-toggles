@@ -1,7 +1,8 @@
 import assert from 'assert/strict'
-import sinon from 'sinon'
-import logger from '../../lib/util/logger.js'
-import ReviewsClient from '../../lib/client/reviews-client.js'
+import sinon, { SinonStubbedInstance, SinonStub } from 'sinon'
+import { Logger } from 'winston'
+import logger from '../../src/lib/util/logger.js'
+import ReviewsClient from '../../src/lib/client/reviews-client.js'
 
 const REVIEWS_ENDPOINT = 'http://localhost:9090'
 const AVERAGE_RATING = 3.1415
@@ -9,23 +10,21 @@ const AVERAGE_RATING = 3.1415
 describe('reviews-client', () => {
   const sandbox = sinon.createSandbox()
 
-  let fetchStub = null
-  let loggerStub = null
-  let reviewsClient = null
+  let fetchStub: SinonStub
+  let loggerStub: SinonStubbedInstance<Logger>
+  let reviewsClient: ReviewsClient
 
   beforeEach(() => {
     fetchStub = sandbox.stub()
     loggerStub = sandbox.stub(logger)
-    loggerStub.child.returnsThis()
+    if (loggerStub.child) {
+      loggerStub.child.returnsThis()
+    }
     reviewsClient = new ReviewsClient(fetchStub, REVIEWS_ENDPOINT, loggerStub)
   })
 
   afterEach(() => {
     sandbox.restore()
-  })
-
-  it('should create a reviews client', () => {
-    assert.ok(reviewsClient instanceof ReviewsClient)
   })
 
   it('should get the reviews endpoint', () => {

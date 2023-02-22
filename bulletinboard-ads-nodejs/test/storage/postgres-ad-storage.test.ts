@@ -1,30 +1,32 @@
 import assert from 'assert/strict'
 import util from 'util'
-import sinon from 'sinon'
-import logger from '../../lib/util/logger.js'
-import Pool from '../../lib/storage/pool.js'
-import PostgresAdStorage from '../../lib/storage/postgres-ad-storage.js'
-import IllegalArgumentError from '../../lib/error/illegal-argument-error.js'
-import NotFoundError from '../../lib/error/not-found-error.js'
+import sinon, { SinonStubbedInstance } from 'sinon'
+import logger from '../../src/lib/util/logger.js'
+import pg from 'pg'
+import { Logger } from 'winston'
+import PostgresAdStorage from '../../src/lib/storage/postgres-ad-storage.js'
+import NotFoundError from '../../src/lib/error/not-found-error.js'
 import { WOLLY_SOCKS, USED_SHOES } from '../data/ads.js'
-import migrate from '../../lib/storage/migrate-api.js'
+import migrate from '../../src/lib/storage/migrate-api.js'
 
 describe('postgres-ad-storage', () => {
   const sandbox = sinon.createSandbox()
   const connectionString = 'postgresql://postgres:postgres@localhost:5432/postgres'
 
-  let pool = null
-  let loggerStub = null
-  let storage = null
+  let pool: pg.Pool
+  let loggerStub: SinonStubbedInstance<Logger>
+  let storage: PostgresAdStorage
 
   before(async () => {
     await migrate({ connectionString }).up()
-    pool = new Pool({ connectionString })
+    pool = new pg.Pool({ connectionString })
   })
 
   beforeEach(async () => {
     loggerStub = sandbox.stub(logger)
-    loggerStub.child.returnsThis()
+    if (loggerStub.child) {
+      loggerStub.child.returnsThis()
+    }
     storage = new PostgresAdStorage(pool, loggerStub)
   })
 
@@ -38,21 +40,6 @@ describe('postgres-ad-storage', () => {
   })
 
   describe('create', () => {
-    it('should reject with an error when creating an invalid ad', async () => {
-      for (const key of Object.keys(WOLLY_SOCKS)) {
-        const invalid = {
-          [key]: null
-        }
-        const invalidAd = {
-          ...WOLLY_SOCKS,
-          ...invalid
-        }
-        const message = util.format('Invalid ad: %O', invalidAd)
-        const error = new IllegalArgumentError(message)
-        await assert.rejects(storage.create(invalidAd), error)
-      }
-    })
-
     it('should create an ad', async () => {
       const id = await storage.create(WOLLY_SOCKS)
       const ads = await storage.readAll()
@@ -65,13 +52,6 @@ describe('postgres-ad-storage', () => {
   })
 
   describe('read', () => {
-    it('should reject with an error when reading an invalid id', async () => {
-      const id = 'invalid'
-      const message = util.format('Invalid id: %s', id)
-      const error = new IllegalArgumentError(message)
-      await assert.rejects(storage.read(id), error)
-    })
-
     it('should reject with an error when reading a non-existing ad', async () => {
       const id = 42
       const message = util.format('No ad found for id: %s', id)
@@ -97,48 +77,25 @@ describe('postgres-ad-storage', () => {
       ])
       const ads = await storage.readAll()
       assert.equal(ads.length, 2)
-      assert.deepEqual(ads, [
-        {
-          id: id1,
-          ...WOLLY_SOCKS
-        },
-        {
-          id: id2,
-          ...USED_SHOES
-        }
-      ])
+      const ad1 = ads.find((ad) => ad.id === id1)
+      const ad2 = ads.find((ad) => ad.id === id2)
+      assert.deepEqual(ad1, {
+        id: id1,
+        ...WOLLY_SOCKS
+      })
+      assert.deepEqual(ad2, {
+        id: id2,
+        ...USED_SHOES
+      })
     })
   })
 
   describe('update', () => {
-    it('should reject with an error when updating an invalid id', async () => {
-      const id = 'invalid'
-      const message = util.format('Invalid id: %s', id)
-      const error = new IllegalArgumentError(message)
-      await assert.rejects(storage.update(id, { price: 10 }), error)
-    })
-
     it('should reject with an error when updating a non-existing ad', async () => {
       const id = 42
       const message = util.format('No ad found for id: %s', id)
       const error = new NotFoundError(message)
-      await assert.rejects(storage.update(id, { price: 10 }), error)
-    })
-
-    it('should reject with an error when updating an invalid ad', async () => {
-      const id = await storage.create(WOLLY_SOCKS)
-      for (const key of Object.keys(WOLLY_SOCKS)) {
-        const invalid = {
-          [key]: null
-        }
-        const invalidAd = {
-          ...WOLLY_SOCKS,
-          ...invalid
-        }
-        const message = util.format('Invalid ad: %O', invalidAd)
-        const error = new IllegalArgumentError(message)
-        await assert.rejects(storage.update(id, invalidAd), error)
-      }
+      await assert.rejects(storage.update(id, WOLLY_SOCKS), error)
     })
 
     it('should update an ad', async () => {
@@ -157,13 +114,6 @@ describe('postgres-ad-storage', () => {
   })
 
   describe('delete', () => {
-    it('should reject with an error when deleting an invalid id', async () => {
-      const id = 'invalid'
-      const message = util.format('Invalid id: %s', id)
-      const error = new IllegalArgumentError(message)
-      await assert.rejects(storage.delete(id), error)
-    })
-
     it('should reject with an error when deleting a non-existing ad', async () => {
       const id = 42
       const message = util.format('No ad found for id: %s', id)
