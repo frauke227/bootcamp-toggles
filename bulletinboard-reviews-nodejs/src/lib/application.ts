@@ -1,10 +1,12 @@
 import { STATUS_CODES } from 'http'
-import express from 'express'
+import express, { ErrorRequestHandler } from 'express'
 import reviewRouter from './router/review-router.js'
 import averageRatingRouter from './router/average-rating-router.js'
 import NotImplementedError from './error/not-implemented-error.js'
+import PostgresReviewStorage from './storage/postgres-review-storage.js'
+import { Logger } from 'winston'
 
-export default (storage, logger) => {
+export default (storage: PostgresReviewStorage, logger: Logger) => {
   const log = logger.child({ module: 'application' })
 
   const app = express()
@@ -33,7 +35,8 @@ export default (storage, logger) => {
     next(error)
   })
 
-  app.use((error, req, res, _next) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
     const defaultCode = 500
     const { code = defaultCode, message } = error
     const { method, url } = req
@@ -43,7 +46,9 @@ export default (storage, logger) => {
       .status(code)
       .type('text/plain')
       .send(status)
-  })
+  }
+
+  app.use(errorHandler)
 
   return app
 }

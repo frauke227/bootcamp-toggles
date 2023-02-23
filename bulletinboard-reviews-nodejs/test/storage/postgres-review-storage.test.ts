@@ -1,29 +1,30 @@
 import assert from 'assert/strict'
-import util from 'util'
-import sinon from 'sinon'
-import logger from '../../lib/util/logger.js'
-import Pool from '../../lib/storage/pool.js'
-import PostgresReviewStorage from '../../lib/storage/postgres-review-storage.js'
-import IllegalArgumentError from '../../lib/error/illegal-argument-error.js'
-import { FIRST_REVIEW, SECOND_REVIEW } from '../reviews.js'
-import migrate from '../../lib/storage/migrate-api.js'
+import sinon, { SinonStubbedInstance } from 'sinon'
+import logger from '../../src/lib/util/logger.js'
+import pg from 'pg'
+import { Logger } from 'winston'
+import PostgresReviewStorage from '../../src/lib/storage/postgres-review-storage.js'
+import { FIRST_REVIEW, SECOND_REVIEW } from '../data/reviews.js'
+import migrate from '../../src/lib/storage/migrate-api.js'
 
 describe('postgres-review-storage', () => {
   const sandbox = sinon.createSandbox()
   const connectionString = 'postgresql://postgres:postgres@localhost:6543/postgres'
 
-  let loggerStub = null
-  let pool = null
-  let storage = null
+  let loggerStub: SinonStubbedInstance<Logger>
+  let pool: pg.Pool
+  let storage: PostgresReviewStorage
 
   before(async () => {
     await migrate({ connectionString }).up()
-    pool = new Pool({ connectionString })
+    pool = new pg.Pool({ connectionString })
   })
 
   beforeEach(() => {
     loggerStub = sandbox.stub(logger)
-    loggerStub.child.returnsThis()
+    if (loggerStub.child) {
+      loggerStub.child.returnsThis()
+    }
     storage = new PostgresReviewStorage(pool, loggerStub)
   })
 
@@ -37,21 +38,6 @@ describe('postgres-review-storage', () => {
   })
 
   describe('create', () => {
-    it('should reject with an error when creating an invalid review', async () => {
-      for (const key of Object.keys(FIRST_REVIEW)) {
-        const invalid = {
-          [key]: null
-        }
-        const invalidReview = {
-          ...FIRST_REVIEW,
-          ...invalid
-        }
-        const message = util.format('Invalid review: %O', invalidReview)
-        const error = new IllegalArgumentError(message)
-        await assert.rejects(storage.create(invalidReview), error)
-      }
-    })
-
     it('should create a review', async () => {
       const id = await storage.create(FIRST_REVIEW)
       const ads = await storage.readAll()

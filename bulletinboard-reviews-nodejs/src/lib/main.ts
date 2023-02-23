@@ -1,16 +1,26 @@
 import logger from './util/logger.js'
-import Pool from './storage/pool.js'
+import pg from 'pg'
 import PostgresReviewStorage from './storage/postgres-review-storage.js'
 import application from './application.js'
 import migrate from './storage/migrate-api.js'
 
-export default async function main (config) {
+
+export type Config = {
+  app: {
+    port: number
+  },
+  postgres: {
+    connectionString: string
+  }
+}
+
+export default async function main(config: Config) {
   const { app: { port }, postgres } = config
 
   const log = logger.child({ module: 'server' })
 
   await migrate(postgres).up()
-  const pool = new Pool(postgres)
+  const pool = new pg.Pool(postgres)
   const storage = new PostgresReviewStorage(pool, logger)
   const app = application(storage, logger)
 

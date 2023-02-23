@@ -2,7 +2,7 @@
 applications:
   - name: bulletinboard-reviews
     memory: 128MB
-    command: node index-cf.js
+    command: node dist/src/index-cf.js
     random-route: true
     buildpacks:
       - https://github.com/cloudfoundry/nodejs-buildpack
