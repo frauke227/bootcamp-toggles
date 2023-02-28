@@ -1,11 +1,13 @@
-import express, { Request, Response, NextFunction } from 'express'
+import express, { Request, Response, NextFunction, RequestHandler } from 'express'
 import { Logger } from 'winston'
 import { validateId, validateAd, AdPayload, Ad, Id } from '../validation/validate.js'
 import ReviewsClient from '../client/reviews-client.js'
 import PostgresAdStorage from '../storage/postgres-ad-storage.js'
 
+type Empty = Record<string, never>
+
 export default (storage: PostgresAdStorage, reviewsClient: ReviewsClient, logger: Logger) => {
-  const validateAndParseId = () => (req: Request<{ id: Id }>, res: Response, next: NextFunction) => {
+  const validateAndParseId: () => RequestHandler<{ id: number }, Ad, AdPayload> = () => (req, res, next) => {
     try {
       const id = req.params.id
       logger.debug('Checking id: %s', id)
@@ -17,7 +19,7 @@ export default (storage: PostgresAdStorage, reviewsClient: ReviewsClient, logger
     }
   }
 
-  const validateAndParseAd = () => (req: Request<{ id: Id }>, res: Response, next: NextFunction) => {
+  const validateAndParseAd: () => RequestHandler<{ id: number }, Ad, AdPayload> = () => (req, res, next) => {
     try {
       const ad = req.body
       // logger.debug('Checking id: %s',add)
@@ -57,7 +59,7 @@ export default (storage: PostgresAdStorage, reviewsClient: ReviewsClient, logger
         .json({
           id,
           ...body,
-          ...await getTransientProps(body)
+          ...await getTransientProps(body as any)
         })
     } catch (error) {
       next(error)

@@ -1,6 +1,6 @@
-import main from './lib/main.js'
+import main, { Config } from './lib/main.js'
 
-const config = {
+const config: Config = {
   app: {
     port: 8080
   },

@@ -11,7 +11,6 @@ import { AdPayload, Ad } from '../../src/lib/validation/validate.js'
 import application from '../../src/lib/application.js'
 import migrate from '../../src/lib/storage/migrate-api.js'
 import { WOLLY_SOCKS, USED_SHOES } from '../data/ads.js'
-import adRouter from '../../src/lib/router/ad-router.js'
 
 const REVIEWS_ENDPOINT = 'http://localhost:9090'
 const AVERAGE_RATING = 3.1415
