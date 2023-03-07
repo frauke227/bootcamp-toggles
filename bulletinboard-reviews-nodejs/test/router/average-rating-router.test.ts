@@ -10,7 +10,6 @@ import application from '../../src/lib/application.js'
 import migrate from '../../src/lib/storage/migrate-api.js'
 
 describe('average-rating-router', () => {
-  const sandbox = sinon.createSandbox()
   const connectionString = 'postgresql://postgres:postgres@localhost:6543/postgres'
 
   let loggerStub: SinonStubbedInstance<Logger>
@@ -24,10 +23,8 @@ describe('average-rating-router', () => {
   })
 
   beforeEach(() => {
-    loggerStub = sandbox.stub(logger)
-    if (loggerStub.child) {
-      loggerStub.child.returnsThis()
-    }
+    loggerStub = sinon.stub(logger)
+    loggerStub.child.returnsThis()
     storage = new PostgresReviewStorage(pool, loggerStub)
     const app = application(storage, loggerStub)
     client = supertest(app)
@@ -35,7 +32,7 @@ describe('average-rating-router', () => {
 
   afterEach(async () => {
     await storage.deleteAll()
-    sandbox.restore()
+    sinon.restore()
   })
 
   after(async () => {

@@ -8,23 +8,19 @@ const REVIEWS_ENDPOINT = 'http://localhost:9090'
 const AVERAGE_RATING = 3.1415
 
 describe('reviews-client', () => {
-  const sandbox = sinon.createSandbox()
-
   let fetchStub: SinonStub
   let loggerStub: SinonStubbedInstance<Logger>
   let reviewsClient: ReviewsClient
 
   beforeEach(() => {
-    fetchStub = sandbox.stub()
-    loggerStub = sandbox.stub(logger)
-    if (loggerStub.child) {
-      loggerStub.child.returnsThis()
-    }
+    fetchStub = sinon.stub()
+    loggerStub = sinon.stub(logger)
+    loggerStub.child.returnsThis()
     reviewsClient = new ReviewsClient(fetchStub, REVIEWS_ENDPOINT, loggerStub)
   })
 
   afterEach(() => {
-    sandbox.restore()
+    sinon.restore()
   })
 
   it('should get the reviews endpoint', () => {
@@ -34,7 +30,7 @@ describe('reviews-client', () => {
 
   it('should get the average rating for a contact', async () => {
     const contact = 'foo@bar.de'
-    const jsonStub = sandbox.stub().resolves({ averageRating: AVERAGE_RATING })
+    const jsonStub = sinon.stub().resolves({ averageRating: AVERAGE_RATING })
     fetchStub
       .withArgs(`${REVIEWS_ENDPOINT}/api/v1/averageRatings/${contact}`)
       .resolves({

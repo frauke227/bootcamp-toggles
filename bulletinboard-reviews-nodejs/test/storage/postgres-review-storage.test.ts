@@ -8,7 +8,6 @@ import { FIRST_REVIEW, SECOND_REVIEW } from '../data/reviews.js'
 import migrate from '../../src/lib/storage/migrate-api.js'
 
 describe('postgres-review-storage', () => {
-  const sandbox = sinon.createSandbox()
   const connectionString = 'postgresql://postgres:postgres@localhost:6543/postgres'
 
   let loggerStub: SinonStubbedInstance<Logger>
@@ -21,16 +20,14 @@ describe('postgres-review-storage', () => {
   })
 
   beforeEach(() => {
-    loggerStub = sandbox.stub(logger)
-    if (loggerStub.child) {
-      loggerStub.child.returnsThis()
-    }
+    loggerStub = sinon.stub(logger)
+    loggerStub.child.returnsThis()
     storage = new PostgresReviewStorage(pool, loggerStub)
   })
 
   afterEach(async () => {
     await storage.deleteAll()
-    sandbox.restore()
+    sinon.restore()
   })
 
   after(async () => {

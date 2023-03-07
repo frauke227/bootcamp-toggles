@@ -1,13 +1,11 @@
-import express, { Request, Response, NextFunction, RequestHandler } from 'express'
+import express, { RequestHandler } from 'express'
 import { Logger } from 'winston'
-import { validateId, validateAd, AdPayload, Ad, Id } from '../validation/validate.js'
+import { validateId, validateAd, AdPayload, Ad } from '../validation/validate.js'
 import ReviewsClient from '../client/reviews-client.js'
 import PostgresAdStorage from '../storage/postgres-ad-storage.js'
 
-type Empty = Record<string, never>
-
 export default (storage: PostgresAdStorage, reviewsClient: ReviewsClient, logger: Logger) => {
-  const validateAndParseId: () => RequestHandler<{ id: number }, Ad, AdPayload> = () => (req, res, next) => {
+  const validateAndParseId: () => RequestHandler<{ id: number }> = () => (req, res, next) => {
     try {
       const id = req.params.id
       logger.debug('Checking id: %s', id)
@@ -19,7 +17,7 @@ export default (storage: PostgresAdStorage, reviewsClient: ReviewsClient, logger
     }
   }
 
-  const validateAndParseAd: () => RequestHandler<{ id: number }, Ad, AdPayload> = () => (req, res, next) => {
+  const validateAndParseAd: () => RequestHandler<unknown, unknown, AdPayload> = () => (req, res, next) => {
     try {
       const ad = req.body
       // logger.debug('Checking id: %s',add)
@@ -59,7 +57,7 @@ export default (storage: PostgresAdStorage, reviewsClient: ReviewsClient, logger
         .json({
           id,
           ...body,
-          ...await getTransientProps(body as any)
+          ...await getTransientProps({ id, ...body })
         })
     } catch (error) {
       next(error)
@@ -99,7 +97,7 @@ export default (storage: PostgresAdStorage, reviewsClient: ReviewsClient, logger
     }
   })
 
-  router.put<{ id: Id }>('/:id', express.json(), validateAndParseAd(), validateAndParseId(), async (req, res, next) => {
+  router.put('/:id', express.json(), validateAndParseAd(), validateAndParseId(), async (req, res, next) => {
     try {
       const { params: { id }, body } = req
       await storage.update(id, body)

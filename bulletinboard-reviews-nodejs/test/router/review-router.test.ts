@@ -14,7 +14,6 @@ import { Review } from '../../src/lib/validation/validate.js'
 const MOUNT_PATH = '/api/v1/reviews'
 
 describe('review-router', () => {
-  const sandbox = sinon.createSandbox()
   const connectionString = 'postgresql://postgres:postgres@localhost:6543/postgres'
 
   let loggerStub: SinonStubbedInstance<Logger>
@@ -28,7 +27,7 @@ describe('review-router', () => {
   })
 
   beforeEach(() => {
-    loggerStub = sandbox.stub(logger)
+    loggerStub = sinon.stub(logger)
     loggerStub.child.returnsThis()
     storage = new PostgresReviewStorage(pool, logger)
     const app = application(storage, loggerStub)
@@ -37,7 +36,7 @@ describe('review-router', () => {
 
   afterEach(async () => {
     await storage.deleteAll()
-    sandbox.restore()
+    sinon.restore()
   })
 
   after(async () => {

@@ -21,7 +21,6 @@ const getTransientProps = ({ contact }: AdPayload) => ({
 })
 
 describe('ad-router', () => {
-  const sandbox = sinon.createSandbox()
   const connectionString = 'postgresql://postgres:postgres@localhost:5432/postgres'
 
   let pool: pg.Pool
@@ -36,14 +35,12 @@ describe('ad-router', () => {
   })
 
   beforeEach(async () => {
-    reviewsClient = sandbox.createStubInstance(ReviewsClient, {
+    reviewsClient = sinon.createStubInstance(ReviewsClient, {
       getEndpoint: REVIEWS_ENDPOINT,
       getAverageRating: Promise.resolve(AVERAGE_RATING)
     })
-    loggerStub = sandbox.stub(logger)
-    if (loggerStub.child) {
-      loggerStub.child.returnsThis()
-    }
+    loggerStub = sinon.stub(logger)
+    loggerStub.child.returnsThis()
     storage = new PostgresAdStorage(pool, loggerStub)
     const app = application(storage, reviewsClient, loggerStub)
     client = supertest(app)
@@ -51,7 +48,7 @@ describe('ad-router', () => {
 
   afterEach(async () => {
     await storage.deleteAll()
-    sandbox.restore()
+    sinon.restore()
   })
 
   after(async () => {

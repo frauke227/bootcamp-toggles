@@ -6,26 +6,25 @@ import supertest from 'supertest'
 import { readFile } from 'fs/promises'
 import { join } from 'path'
 import logger from '../src/lib/util/logger.js'
-import PostgresAdStorage from '../src/lib/storage/postgres-ad-storage.js'
+import PostgresReviewStorage from '../src/lib/storage/postgres-review-storage.js'
 import application from '../src/lib/application.js'
-import ReviewsClient from '../src/lib/client/reviews-client.js'
 
 describe('application', () => {
   let loggerStub: SinonStubbedInstance<Logger>
-  let storageStub: SinonStubbedInstance<PostgresAdStorage>
-  let reviewsClientStub: SinonStubbedInstance<ReviewsClient>
+  let storageStub: SinonStubbedInstance<PostgresReviewStorage>
   let client: supertest.SuperTest<supertest.Test>
 
   beforeEach(() => {
     loggerStub = sinon.stub(logger)
     loggerStub.child.returnsThis()
-    reviewsClientStub = sinon.createStubInstance(ReviewsClient)
-    storageStub = sinon.createStubInstance(PostgresAdStorage)
-    const app = application(storageStub, reviewsClientStub, loggerStub)
+    storageStub = sinon.createStubInstance(PostgresReviewStorage)
+    const app = application(storageStub, loggerStub)
     client = supertest(app)
   })
 
-  afterEach(() => sinon.restore())
+  afterEach(() => {
+    sinon.restore()
+  })
 
   describe('get /public', () => {
     it('should serve the ui', async () => {

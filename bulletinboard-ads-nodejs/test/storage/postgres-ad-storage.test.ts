@@ -10,7 +10,6 @@ import { WOLLY_SOCKS, USED_SHOES } from '../data/ads.js'
 import migrate from '../../src/lib/storage/migrate-api.js'
 
 describe('postgres-ad-storage', () => {
-  const sandbox = sinon.createSandbox()
   const connectionString = 'postgresql://postgres:postgres@localhost:5432/postgres'
 
   let pool: pg.Pool
@@ -23,16 +22,14 @@ describe('postgres-ad-storage', () => {
   })
 
   beforeEach(async () => {
-    loggerStub = sandbox.stub(logger)
-    if (loggerStub.child) {
-      loggerStub.child.returnsThis()
-    }
+    loggerStub = sinon.stub(logger)
+    loggerStub.child.returnsThis()
     storage = new PostgresAdStorage(pool, loggerStub)
   })
 
   afterEach(async () => {
     await storage.deleteAll()
-    sandbox.restore()
+    sinon.restore()
   })
 
   after(async () => {

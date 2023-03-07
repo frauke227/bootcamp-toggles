@@ -16,7 +16,6 @@ const Id = z.coerce.number().gte(1)
 
 export type AdPayload = z.infer<typeof AdPayload>
 export type Ad = z.infer<typeof Ad>
-export type Id = z.infer<typeof Id>
 
 export const validateAd = (adPayload: unknown) => {
   const result = AdPayload.safeParse(adPayload)

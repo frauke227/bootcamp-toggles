@@ -2,7 +2,7 @@ import util from 'util'
 import { Pool } from 'pg'
 import { Logger } from 'winston'
 import NotFoundError from '../error/not-found-error.js'
-import { AdPayload, Ad, Id } from '../validation/validate.js'
+import { AdPayload, Ad } from '../validation/validate.js'
 
 export default class PostgresAdStorage {
   static EXISTS = 'SELECT EXISTS(SELECT 1 FROM ads WHERE id=$1)'
@@ -22,7 +22,7 @@ export default class PostgresAdStorage {
     })
   }
 
-  private async checkExists(id: Id) {
+  private async checkExists(id: number) {
     this.logger.debug('Checking id: %s', id)
     const { rows: [{ exists }] } = await this.pool.query<{ exists: boolean }>(PostgresAdStorage.EXISTS, [id])
     if (!exists) {
@@ -45,7 +45,7 @@ export default class PostgresAdStorage {
     }
   }
 
-  async read(id: Id) {
+  async read(id: number) {
     try {
       this.logger.debug('Reading ad with id: %s', id)
       await this.checkExists(id)
@@ -72,7 +72,7 @@ export default class PostgresAdStorage {
     }
   }
 
-  async update(id: Id, { title, contact, price, currency }: AdPayload) {
+  async update(id: number, { title, contact, price, currency }: AdPayload) {
     try {
       this.logger.debug('Updating ad with id: %s with update: %O', id, { title, contact, price, currency })
       await this.checkExists(id)
@@ -85,7 +85,7 @@ export default class PostgresAdStorage {
     }
   }
 
-  async delete(id: Id) {
+  async delete(id: number) {
     try {
       this.logger.debug('Deleting ad with id: %s', id)
       await this.checkExists(id)
