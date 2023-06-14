@@ -12,8 +12,8 @@
     "lint": "eslint .",
     "db:start": "./start-db.sh",
     "db:prune": "docker volume rm bb_ads_local_nodejs",
-    "db:migrate:up": "ts-node migrate.ts up",
-    "db:migrate:down": "ts-node migrate.ts down"
+    "db:migrate:up": "ts-node src/migrate.ts up",
+    "db:migrate:down": "ts-node src/migrate.ts down"
   },
   "engines": {
     "node": "16.x"
