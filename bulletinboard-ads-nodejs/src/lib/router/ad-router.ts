@@ -65,8 +65,17 @@ export default (storage: PostgresAdStorage, reviewsClient: ReviewsClient, logger
   })
 
   router.get('/', async (req, res, next) => {
+    // isOrderByNoOfViewsEnabled move this out to env.
+    // check if all working and sorting properly
+    const isOrderByNoOfViewsEnabled = false
     try {
-      let ads = await storage.readAll()
+      let ads
+      if(isOrderByNoOfViewsEnabled){
+        ads =await storage.readAllSorted()
+      }else{
+        ads = await storage.readAll()
+      }
+      // let ads = await storage.readAll()
       ads = await Promise.all(ads.map(async (ad) => {
         return {
           ...ad,

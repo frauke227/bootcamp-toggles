@@ -12,6 +12,7 @@ export default class PostgresAdStorage {
   static UPDATE = 'UPDATE ads SET (title, contact, price, currency) = ($2, $3, $4, $5) WHERE id = $1'
   static DELETE = 'DELETE FROM ads WHERE id = $1'
   static DELETE_ALL = 'DELETE FROM ads'
+  static READ_ALL_SORTED = 'SELECT id, title, contact, price, currency FROM ads ORDER BY title DESC'
 
   private logger: Logger
 
@@ -68,6 +69,19 @@ export default class PostgresAdStorage {
     } catch (error) {
       const { message } = error as Error
       this.logger.error('Error reading all ads - %s', message)
+      throw error
+    }
+  }
+
+  async readAllSorted() {
+    try {
+      this.logger.debug('Reading all ads sorted by name')
+      const { rows } = await this.pool.query<Ad>(PostgresAdStorage.READ_ALL_SORTED)
+      this.logger.debug('Successfully read all ads sorted - %O', rows)
+      return rows
+    } catch (error) {
+      const { message } = error as Error
+      this.logger.error('Error reading all ads sorted - %s', message)
       throw error
     }
   }
