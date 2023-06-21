@@ -16,6 +16,9 @@ export type Config = {
   reviews: {
     endpoint: string
   }
+  toggle: {
+    isOrderByNoOfViewsEnabled: boolean
+  }
 }
 
 export default async function main(config: Config) {
@@ -27,7 +30,7 @@ export default async function main(config: Config) {
   const pool = new pg.Pool(postgres)
   const storage = new PostgresAdStorage(pool, logger)
   const reviewsClient = new ReviewsClient(fetch, endpoint, logger)
-  const app = application(storage, reviewsClient, logger)
+  const app = application(storage, reviewsClient, logger, config)
 
   app
     .listen(port, () => log.info('Server is listening on http://localhost:%d', port))

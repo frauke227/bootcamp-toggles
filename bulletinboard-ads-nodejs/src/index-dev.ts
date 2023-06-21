@@ -9,6 +9,10 @@ const config: Config = {
   },
   reviews: {
     endpoint: 'http://localhost:9090'
+  },
+  toggle: {
+    isOrderByNoOfViewsEnabled: Boolean(process.env.ORDERED_TOGGLE)
+    //passed a string so always results in true when exported
   }
 }
 

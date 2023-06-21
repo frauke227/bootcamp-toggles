@@ -29,6 +29,9 @@ const config = {
   },
   reviews: {
     endpoint: process.env.REVIEWS_ENDPOINT
+  },
+  toggle: {
+    isOrderByNoOfViewsEnabled: Boolean(process.env.ORDERED_TOGGLE)
   }
 }
 

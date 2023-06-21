@@ -3,8 +3,9 @@ import { Logger } from 'winston'
 import { validateId, validateAd, AdPayload, Ad } from '../validation/validate.js'
 import ReviewsClient from '../client/reviews-client.js'
 import PostgresAdStorage from '../storage/postgres-ad-storage.js'
+import { Config } from '../main.js'
 
-export default (storage: PostgresAdStorage, reviewsClient: ReviewsClient, logger: Logger) => {
+export default (storage: PostgresAdStorage, reviewsClient: ReviewsClient, logger: Logger, config: Config) => {
   const validateAndParseId: () => RequestHandler<{ id: number }> = () => (req, res, next) => {
     try {
       const id = req.params.id
@@ -67,12 +68,13 @@ export default (storage: PostgresAdStorage, reviewsClient: ReviewsClient, logger
   router.get('/', async (req, res, next) => {
     // isOrderByNoOfViewsEnabled move this out to env.
     // check if all working and sorting properly
-    const isOrderByNoOfViewsEnabled = false
+    const isOrderByNoOfViewsEnabled = config.toggle.isOrderByNoOfViewsEnabled
+    console.log('isOrderByNoOfViewsEnabled', isOrderByNoOfViewsEnabled)
     try {
       let ads
       if(isOrderByNoOfViewsEnabled){
-        ads =await storage.readAllSorted()
-      }else{
+        ads = await storage.readAllSorted()
+        }else{
         ads = await storage.readAll()
       }
       // let ads = await storage.readAll()
