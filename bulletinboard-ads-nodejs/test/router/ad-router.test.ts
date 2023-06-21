@@ -11,6 +11,7 @@ import { AdPayload, Ad } from '../../src/lib/validation/validate.js'
 import application from '../../src/lib/application.js'
 import migrate from '../../src/lib/storage/migrate-api.js'
 import { WOLLY_SOCKS, USED_SHOES } from '../data/ads.js'
+import { Config } from '../../src/lib/main.js'
 
 const REVIEWS_ENDPOINT = 'http://localhost:9090'
 const AVERAGE_RATING = 3.1415
@@ -28,6 +29,7 @@ describe('ad-router', () => {
   let storage: PostgresAdStorage
   let reviewsClient: SinonStubbedInstance<ReviewsClient>
   let client: supertest.SuperTest<supertest.Test>
+  let config: Config
 
   before(async () => {
     await migrate({ connectionString }).up()
@@ -42,7 +44,7 @@ describe('ad-router', () => {
     loggerStub = sinon.stub(logger)
     loggerStub.child.returnsThis()
     storage = new PostgresAdStorage(pool, loggerStub)
-    const app = application(storage, reviewsClient, loggerStub)
+    const app = application(storage, reviewsClient, loggerStub, config)
     client = supertest(app)
   })
 

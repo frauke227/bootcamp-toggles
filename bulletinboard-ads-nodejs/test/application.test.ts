@@ -9,19 +9,21 @@ import logger from '../src/lib/util/logger.js'
 import PostgresAdStorage from '../src/lib/storage/postgres-ad-storage.js'
 import application from '../src/lib/application.js'
 import ReviewsClient from '../src/lib/client/reviews-client.js'
+import { Config } from '../src/lib/main.js'
 
 describe('application', () => {
   let loggerStub: SinonStubbedInstance<Logger>
   let storageStub: SinonStubbedInstance<PostgresAdStorage>
   let reviewsClientStub: SinonStubbedInstance<ReviewsClient>
   let client: supertest.SuperTest<supertest.Test>
+  let config: Config
 
   beforeEach(() => {
     loggerStub = sinon.stub(logger)
     loggerStub.child.returnsThis()
     reviewsClientStub = sinon.createStubInstance(ReviewsClient)
     storageStub = sinon.createStubInstance(PostgresAdStorage)
-    const app = application(storageStub, reviewsClientStub, loggerStub)
+    const app = application(storageStub, reviewsClientStub, loggerStub, config)
     client = supertest(app)
   })
 
