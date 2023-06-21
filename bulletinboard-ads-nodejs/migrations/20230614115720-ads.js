@@ -40,7 +40,6 @@ exports.up = async db => {
     },
     views: {
       type: 'int',
-      autoIncrement: true
     },
   })
 }

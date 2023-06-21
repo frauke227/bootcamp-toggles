@@ -33,10 +33,10 @@ export default class PostgresAdStorage {
     }
   }
 
-  async create({ title, contact, price, currency }: AdPayload) {
+  async create({ title, contact, price, currency, views }: any) {
     try {
       this.logger.debug('Creating ad: %O', { title, contact, price, currency })
-      const { rows: [{ id }] } = await this.pool.query(PostgresAdStorage.CREATE, [title, contact, price, currency])
+      const { rows: [{ id }] } = await this.pool.query(PostgresAdStorage.CREATE, [title, contact, price, currency, views])
       this.logger.debug('Successfully created ad: %O - %d', { title, contact, price, currency }, id)
       return id
     } catch (error) {
