@@ -58,6 +58,7 @@ export default (storage: PostgresAdStorage, reviewsClient: ReviewsClient, logger
         .json({
           id,
           ...body,
+          ...{views: 0},
           ...await getTransientProps({ id, ...body })
         })
     } catch (error) {
@@ -96,6 +97,8 @@ export default (storage: PostgresAdStorage, reviewsClient: ReviewsClient, logger
     try {
       const { params: { id } } = req
       let ad = await storage.read(id)
+      //update the views +1
+      await storage.updateViews(id)
       ad = {
         ...ad,
         ...await getTransientProps(ad)

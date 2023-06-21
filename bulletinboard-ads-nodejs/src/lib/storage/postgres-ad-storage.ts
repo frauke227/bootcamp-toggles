@@ -6,13 +6,14 @@ import { AdPayload, Ad } from '../validation/validate.js'
 
 export default class PostgresAdStorage {
   static EXISTS = 'SELECT EXISTS(SELECT 1 FROM ads WHERE id=$1)'
-  static CREATE = 'INSERT INTO ads (title, contact, price, currency) VALUES ($1, $2, $3, $4) RETURNING id'
+  static CREATE = 'INSERT INTO ads (title, contact, price, currency, views) VALUES ($1, $2, $3, $4, $5) RETURNING id'
   static READ = 'SELECT id, title, contact, price, currency FROM ads WHERE id = $1'
   static READ_ALL = 'SELECT id, title, contact, price, currency FROM ads'
   static UPDATE = 'UPDATE ads SET (title, contact, price, currency) = ($2, $3, $4, $5) WHERE id = $1'
   static DELETE = 'DELETE FROM ads WHERE id = $1'
   static DELETE_ALL = 'DELETE FROM ads'
   static READ_ALL_SORTED = 'SELECT id, title, contact, price, currency FROM ads ORDER BY title DESC'
+  static UPDATE_VIEWS = 'UPDATE ads SET (views +1) WHERE id = $1'
 
   private logger: Logger
 
@@ -60,6 +61,19 @@ export default class PostgresAdStorage {
     }
   }
 
+  async updateViews(id: number) {
+    try {
+      this.logger.debug('Reading ad with id: %s', id)
+      await this.checkExists(id)
+      const { rows: [ad] } = await this.pool.query(PostgresAdStorage.UPDATE_VIEWS, [id])
+      this.logger.debug('Successfully updated views for ad with id: %s - %O', ad)
+      return ad
+    } catch (error) {
+      const { message } = error as Error
+      this.logger.error('Error updating ad views with id: %s - %s', id, message)
+      throw error
+    }
+  }
   async readAll() {
     try {
       this.logger.debug('Reading all ads')
