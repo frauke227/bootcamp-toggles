@@ -58,7 +58,6 @@ export default (storage: PostgresAdStorage, reviewsClient: ReviewsClient, logger
         .json({
           id,
           ...body,
-          ...{views: 0},
           ...await getTransientProps({ id, ...body })
         })
     } catch (error) {

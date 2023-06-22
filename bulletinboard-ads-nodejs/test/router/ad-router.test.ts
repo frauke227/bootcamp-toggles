@@ -44,6 +44,12 @@ describe('ad-router', () => {
     loggerStub = sinon.stub(logger)
     loggerStub.child.returnsThis()
     storage = new PostgresAdStorage(pool, loggerStub)
+    config = {
+      app: {port: 1},
+      postgres: {connectionString: ''},
+      reviews: {endpoint: ''},
+      toggle: {isOrderByNoOfViewsEnabled: false}
+    }
     const app = application(storage, reviewsClient, loggerStub, config)
     client = supertest(app)
   })
@@ -109,6 +115,27 @@ describe('ad-router', () => {
         ...USED_SHOES,
         ...getTransientProps(USED_SHOES)
       })
+    })
+
+
+    it('should read a list of ads in different order with active feature flag', async () => {
+
+      config.toggle.isOrderByNoOfViewsEnabled = true
+      const [id1, id2] = await Promise.all([storage.create(WOLLY_SOCKS), storage.create(USED_SHOES)])
+
+      // view second ad to change the order
+      await client
+        .get(`/api/v1/ads/${id2}`)
+
+      const { body } =
+        await client
+          .get('/api/v1/ads')
+          .expect(200)
+
+      assert.equal(body.length, 2)
+      console.log('toggle value',config.toggle.isOrderByNoOfViewsEnabled)
+      assert.deepEqual(body[0].id, id2)
+      assert.deepEqual(body[1].id, id1)
     })
   })
 

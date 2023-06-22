@@ -6,14 +6,14 @@ import { AdPayload, Ad } from '../validation/validate.js'
 
 export default class PostgresAdStorage {
   static EXISTS = 'SELECT EXISTS(SELECT 1 FROM ads WHERE id=$1)'
-  static CREATE = 'INSERT INTO ads (title, contact, price, currency, views) VALUES ($1, $2, $3, $4, $5) RETURNING id'
+  static CREATE = 'INSERT INTO ads (title, contact, price, currency) VALUES ($1, $2, $3, $4) RETURNING id'
   static READ = 'SELECT id, title, contact, price, currency FROM ads WHERE id = $1'
   static READ_ALL = 'SELECT id, title, contact, price, currency FROM ads'
   static UPDATE = 'UPDATE ads SET (title, contact, price, currency) = ($2, $3, $4, $5) WHERE id = $1'
   static DELETE = 'DELETE FROM ads WHERE id = $1'
   static DELETE_ALL = 'DELETE FROM ads'
-  static READ_ALL_SORTED = 'SELECT id, title, contact, price, currency FROM ads ORDER BY title DESC'
-  static UPDATE_VIEWS = 'UPDATE ads SET (views +1) WHERE id = $1'
+  static READ_ALL_SORTED = 'SELECT id, title, contact, price, currency FROM ads ORDER BY views DESC'
+  static UPDATE_VIEWS = 'UPDATE ads SET views = views + 1 WHERE id = $1 RETURNING views'
 
   private logger: Logger
 
@@ -33,10 +33,10 @@ export default class PostgresAdStorage {
     }
   }
 
-  async create({ title, contact, price, currency, views }: any) {
+  async create({ title, contact, price, currency }: any) {
     try {
       this.logger.debug('Creating ad: %O', { title, contact, price, currency })
-      const { rows: [{ id }] } = await this.pool.query(PostgresAdStorage.CREATE, [title, contact, price, currency, views])
+      const { rows: [{ id }] } = await this.pool.query(PostgresAdStorage.CREATE, [title, contact, price, currency])
       this.logger.debug('Successfully created ad: %O - %d', { title, contact, price, currency }, id)
       return id
     } catch (error) {
@@ -63,17 +63,18 @@ export default class PostgresAdStorage {
 
   async updateViews(id: number) {
     try {
-      this.logger.debug('Reading ad with id: %s', id)
+      this.logger.info('Trying to update views for ad with id: %s', id)
       await this.checkExists(id)
-      const { rows: [ad] } = await this.pool.query(PostgresAdStorage.UPDATE_VIEWS, [id])
-      this.logger.debug('Successfully updated views for ad with id: %s - %O', ad)
-      return ad
+      const result = await this.pool.query(PostgresAdStorage.UPDATE_VIEWS, [id])
+      this.logger.info('Successfully updated views for ad with id: %s to no.of views %s', id, result.rows[0])
+      return result.rows[0]
     } catch (error) {
       const { message } = error as Error
       this.logger.error('Error updating ad views with id: %s - %s', id, message)
       throw error
     }
   }
+
   async readAll() {
     try {
       this.logger.debug('Reading all ads')

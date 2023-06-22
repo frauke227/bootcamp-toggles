@@ -138,4 +138,15 @@ describe('postgres-ad-storage', () => {
       assert.deepEqual(await storage.readAll(), [])
     })
   })
+
+  describe('update views', () => {
+    it('should update views', async () => {
+      const id = await storage.create(WOLLY_SOCKS)
+      const result = await storage.updateViews(id)
+      assert.deepEqual(result, {views: 1})
+      const nextResult = await storage.updateViews(id)
+      assert.deepEqual(nextResult, {views: 2})
+    })
+  })
 })
+
